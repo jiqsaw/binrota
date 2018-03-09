@@ -1,0 +1,1096 @@
+<template version="2.0">
+  <header>
+    <app>
+    </app>
+    <name>CSharpClass</name>
+    <description>Generates C# business class</description>
+    <author>Caretta</author>
+    <legal>Copyright (C) 1999-2007 Caretta Yazılım. All rights reserved.</legal>
+    <ExpectedObjectTypes>Table</ExpectedObjectTypes>
+  </header>
+  <languages>
+    <output>C#</output>
+    <scripting>CSharp</scripting>
+  </languages>
+  <outputfile>
+    <name>
+    </name>
+    <path>
+    </path>
+    <Mode>MultiFile</Mode>
+    <Encoding>1254</Encoding>
+  </outputfile>
+  <Import>
+    <includes>
+      <filename>CSharpHelper.cs</filename>
+    </includes>
+    <Namespaces />
+    <Assemblies />
+    <Templates />
+  </Import>
+  <templatecode><![CDATA[<%
+//------------------------------------------------------------ 
+// TEMPLATE : Base C# Class
+// PURPOSE  : Generates Base C# classes for tables
+// EXPECTS  : Tables
+// OUTPUT   : C#
+// AUTHOR   : CARETTA - İlker Nacaklı - Edited by UA
+// MODIFIED : July 2007
+// NOTES
+//------------------------------------------------------------
+
+Table objTable = Code.Database.ActiveTable;
+
+string ProjectNamespace = "UATMSDAL";
+
+string savePrefix = "Save";
+string selectPrefix = "Load";
+string selectallPrefix = "LoadAll";
+string selectbyparamsPrefix = "LoadByParams";
+string deletePrefix = "Delete";
+string updatePrefix = "Update";
+string insertPrefix = "Insert";
+//DBHelper.getConnection();
+//new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConnStr"].ToString());
+//SQL
+string sprocPrefix = "sproc";
+string loadSuffix = "Select";
+string loadallSuffix = "SelectAll";
+string insertSuffix = "Insert";
+string updateSuffix = "Update";
+string deleteSuffix = "Delete";
+string deletebyparamsSuffix = "DeleteByParams";
+string loadbyparamsSuffix = "SelectByParams";
+string inheritedClassName="d" + objTable.Name;
+
+%>
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using CARETTA.DBI;
+
+namespace <%=ProjectNamespace%>.Entities {
+
+	public class b<%=objTable.Name%> {
+		//transactions
+		//	enum types
+		protected enum Action { Insert, Update, Delete };
+		<%if(objTable.PrimaryKeyColumns.Count > 0) {
+		%>	//	Sub-types
+		public struct PK {
+		<%	
+		foreach(Column column in objTable.PrimaryKeyColumns) {
+		%>		public <%Out.WriteLine("{0} {1};", column.AdoNetMapping.NetSqlType, column.Name);
+			}			
+		%>
+		}	
+		
+		
+		protected Action m_aAction;
+		protected bool m_bIsDirty;
+
+<%		
+		if(objTable.Columns.Count > 0) {
+			Out.WriteLine("\t\t#region Table Members");
+			for(int ctr = 0; ctr<objTable.Columns.Count; ctr++) {
+				Column column = objTable.Columns[ctr];
+%>		protected <%
+				Out.WriteLine("{0} m_{1}{2};", column.AdoNetMapping.NetSqlType, column.GetPrefix("C#"), column.Name);
+				
+				if (column.SQLDatatype=="datetime")
+				{
+				Out.WriteLine("protected {0} m_FindBefore_{1}{2};", column.AdoNetMapping.NetSqlType, column.GetPrefix("C#"), column.Name);
+				Out.WriteLine("protected {0} m_FindAfter_{1}{2};", column.AdoNetMapping.NetSqlType, column.GetPrefix("C#"), column.Name);
+				}
+				
+			}
+			Out.WriteLine("\t\t#endregion"); 
+		}
+	
+		%>
+		
+		<%
+		Out.WriteLine("#region Properties"); 
+		if(objTable.PrimaryKeyColumns.Count > 0) {
+	%>	
+		public PK PrimaryKey {
+			get {
+				PK pk;
+	<%				
+				for(int j = 0; j<objTable.PrimaryKeyColumns.Count; j++)
+				{
+					Column column = objTable.PrimaryKeyColumns[j];
+	%>			<%	Out.WriteLine("pk.{0} = m_{1}{2};", column.Name, column.GetPrefix("C#"), column.Name);
+				}				
+	%>
+				return pk;
+			}
+		}
+	<%
+	}
+	
+	foreach(Column column in objTable.Columns) {
+	%>
+		<%if (column.SQLDatatype=="datetime")
+		{%>
+		public <%Out.Write("{0} FindBefore_{1}", column.GetMappedType("C#"), column.Name);%> {
+			get {
+				return <%Out.Write("({0})m_FindBefore_{1}{2};", column.GetMappedType("C#"), column.GetPrefix("C#"), column.Name);%>
+			}
+			set {
+				<%Out.Write("m_FindBefore_{0}{1}", column.GetPrefix("C#"), column.Name);%> = value;
+				m_bIsDirty = true;
+			}
+		}
+		
+		public <%Out.Write("{0} FindAfter_{1}", column.GetMappedType("C#"), column.Name);%> {
+			get {
+				return <%Out.Write("({0})m_FindAfter_{1}{2};", column.GetMappedType("C#"), column.GetPrefix("C#"), column.Name);%>
+			}
+			set {
+				<%Out.Write("m_FindAfter_{0}{1}", column.GetPrefix("C#"), column.Name);%> = value;
+				m_bIsDirty = true;
+			}
+		}
+		
+		<%}%>
+		
+		public <%Out.Write("{0} {1}", column.GetMappedType("C#"), column.Name);%> {
+			get {
+				return <%Out.Write("({0})m_{1}{2};", column.GetMappedType("C#"), column.GetPrefix("C#"), column.Name);%>
+			}
+			set {
+				<%Out.Write("m_{0}{1}", column.GetPrefix("C#"), column.Name);%> = value;
+				m_bIsDirty = true;
+			}
+		}
+		
+	<%
+	}
+	Out.WriteLine("#endregion"); 
+	%>	
+		<% Out.WriteLine("#region Constructers"); %>
+		public b<%=objTable.Name%>() {
+			Init();	//	init Object
+		}
+		<% Out.WriteLine("#endregion"); %>
+		<% Out.WriteLine("#region Static Functions"); %>
+		/// <summary>
+		/// Gets all <%=objTable.Name%> from the database, using the default connection string, into a SQLDataReader
+		/// </summary>
+		/// <returns>The SQLDataReader With the <%=objTable.Name%></returns>
+		
+		public static SqlDataReader <%=selectallPrefix%>Reader() {
+			SqlConnection conn = DBHelper.getConnection();
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name, loadallSuffix)%>", conn);
+
+			conn.Open();
+			SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+			return reader;
+		}
+		
+		public static DataSet <%=selectallPrefix%>() {
+            SqlConnection conn = DBHelper.getConnection();
+            SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name, loadallSuffix)%>", conn);
+
+            conn.Open();
+            DataSet ds = new DataSet();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(ds);
+			conn.Close();
+            return ds;
+        }
+		
+		/// <summary>
+		/// Gets all <%=objTable.Name%> from the database, using the default connection string, into a hashtable SQLReader
+		/// </summary>
+		/// <returns></returns>
+		public static Hashtable <%=selectallPrefix%>HashTable() {
+			SqlDataReader dr = <%=selectallPrefix%>Reader();
+			return ConvertReaderToHashTable(dr);
+		}
+		
+		/// <summary>
+		/// Creates <%=objTable.Name%> for records In the prefilled DataReader, And puts them into a HashTable
+		/// </summary>
+		/// <param name="dr">The DataReader prefilled With the <%=objTable.Name%> records</param>
+		/// <returns>The Hashtable containing <%=objTable.Name%> objects And their ID As key.</returns>
+		protected static Hashtable ConvertReaderToHashTable(SqlDataReader dr) {
+			Hashtable result = new Hashtable();
+			while (dr.Read()) {
+	<%		Out.IndentLevel = 3;
+			
+			string appendText = "";
+			Out.WriteLine("{0} my{1} = new {0}({2});", inheritedClassName,objTable.Name, appendText);
+			Out.WriteLine("");
+			int i = 0;
+			foreach(Column objColumn in objTable.Columns) {
+				Out.WriteLine("my{0}.m_{1}{2} = dr.{3}({4});",
+					objTable.Name, objColumn.GetPrefix("C#"), objColumn.Name, objColumn.AdoNetMapping.SqlAccessor, i);
+				i++;
+			}
+			
+			if(objTable.PrimaryKeyColumns.Count > 0) {
+				Out.WriteLine("");
+	
+				Out.WriteLine("result.Add(my{0}.{1}, my{2});", objTable.Name, objTable.PrimaryKeyColumns[0], objTable.Name);
+			}
+			Out.IndentLevel = 0;
+	%>		}
+	
+			dr.Close();
+			return result;
+		}
+		
+		public static int Insert(b<%=objTable.Name%> obj<%=objTable.Name%>) {
+			//	construct new connection and command objects
+			SqlConnection conn = DBHelper.getConnection();
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name, insertSuffix)%>", conn);
+			
+			SqlParameter param;
+		
+			//	Add return value param
+			param = new SqlParameter("@RETURN_VALUE",SqlDbType.Int);
+			param.Direction = ParameterDirection.ReturnValue;
+			cmd.Parameters.Add(param);
+		
+			//	Add params
+		<%	Out.IndentLevel = 2;
+		
+			foreach(Column column in objTable.Columns) {
+				Out.WriteLine("param = new SqlParameter(\"@{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+				Out.WriteLine("param.Direction = ParameterDirection.Input;");
+				if (!column.IsIdentity && !column.IsTimeStamp)
+				{
+					Out.WriteLine("param.Value=obj{0}.m_{1}{2};",objTable.Name,column.GetPrefix("C#"),column.Name);
+				}
+				Out.WriteLine("cmd.Parameters.Add(param);");
+				Out.WriteLine("");
+			}
+			
+			Out.IndentLevel = 0;
+		%>		
+			//	open connection
+			conn.Open();
+			//	Execute command
+			cmd.ExecuteNonQuery();
+			//	get return value
+			int retValue = 0;
+			try {
+				//	get return value of the sproc
+				retValue = (int)cmd.Parameters["@RETURN_VALUE"].Value;
+			} catch(System.Exception) {	//	catch all possible exceptions
+				retValue = 0;	//	set retValue To 0 (all ok)
+			}
+			//	close connection
+			conn.Close();
+		
+			//	set dirty flag To false
+			<%
+				foreach(Column column in objTable.Columns) {
+					if(column.IsIdentity)
+					{
+						Out.WriteLine("if (retValue != 0)");
+						if (column.AdoNetMapping.CLRType != "Int32")
+							Out.WriteLine("\t\t\t\tobj{0}.{1} = ({2})retValue;",objTable.Name,column.Name,column.AdoNetMapping.CLRType);
+						else
+							Out.WriteLine("\t\t\t\tobj{0}.{1} = retValue;",objTable.Name,column.Name);
+					}
+				}
+			%>
+			return retValue;
+		}
+		
+		public static int Insert(b<%=objTable.Name%> obj<%=objTable.Name%>,SqlConnection sqlConn,SqlTransaction sqlTran) {
+			//	construct new connection and command objects
+			SqlConnection conn = sqlConn;
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name, insertSuffix)%>", conn);
+			cmd.Transaction=sqlTran;
+			
+			SqlParameter param;
+		
+			//	Add return value param
+			param = new SqlParameter("@RETURN_VALUE",SqlDbType.Int);
+			param.Direction = ParameterDirection.ReturnValue;
+			cmd.Parameters.Add(param);
+		
+			//	Add params
+		<%	Out.IndentLevel = 2;
+		
+			foreach(Column column in objTable.Columns) {
+				Out.WriteLine("param = new SqlParameter(\"@{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+				Out.WriteLine("param.Direction = ParameterDirection.Input;");
+				Out.WriteLine("param.Value=obj{0}.m_{1}{2};",objTable.Name,column.GetPrefix("C#"),column.Name);
+				Out.WriteLine("cmd.Parameters.Add(param);");
+				Out.WriteLine("");
+			}
+			
+			Out.IndentLevel = 0;
+		%>		
+		
+			//	Execute command
+			cmd.ExecuteNonQuery();
+			//	get return value
+			int retValue = 0;
+			try {
+				//	get return value of the sproc
+				retValue = (int)cmd.Parameters["@RETURN_VALUE"].Value;
+			} catch(System.Exception) {	//	catch all possible exceptions
+				retValue = 0;	//	set retValue To 0 (all ok)
+			}
+			
+			//	set dirty flag To false
+			<%
+				foreach(Column column in objTable.Columns) {
+					if(column.IsIdentity)
+					{
+						Out.WriteLine("if (retValue != 0)");
+						if (column.AdoNetMapping.CLRType != "Int32")
+							Out.WriteLine("\t\t\t\tobj{0}.{1} = ({2})retValue;",objTable.Name,column.Name,column.AdoNetMapping.CLRType);
+						else
+							Out.WriteLine("\t\t\t\tobj{0}.{1} = retValue;",objTable.Name,column.Name);
+					}
+				}
+			%>
+			return retValue;
+		}
+
+		public static int Update(b<%=objTable.Name%> obj<%=objTable.Name%>) {
+			//	construct new connection and command objects
+			SqlConnection conn = DBHelper.getConnection();
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name,updateSuffix)%>", conn);
+		
+			SqlParameter param;
+		
+			//	add return value param
+			param = new SqlParameter("@RETURN_VALUE",SqlDbType.Int);
+			param.Direction = ParameterDirection.ReturnValue;
+			cmd.Parameters.Add(param);
+		
+			//	add params
+		<%	Out.IndentLevel = 2;
+		
+			if(objTable.PrimaryKeyColumns.Count > 0) {
+				foreach(Column column in objTable.PrimaryKeyColumns) {
+					Out.WriteLine("param = new SqlParameter(\"@{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+					Out.WriteLine("param.Direction = ParameterDirection.Input;");
+					Out.WriteLine("param.Value=obj{0}.m_{1}{2};",objTable.Name,column.GetPrefix("C#"),column.Name);
+					Out.WriteLine("cmd.Parameters.Add(param);");
+					Out.WriteLine(""); 
+				}
+			}
+			
+			foreach(Column column in objTable.Columns) {
+				// check if  columnstringnot a key
+				if(!column.IsInPrimaryKey) {
+					Out.WriteLine("param = new SqlParameter(\"@{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+					Out.WriteLine("param.Direction = ParameterDirection.Input;");
+					Out.WriteLine("param.Value=obj{0}.m_{1}{2};",objTable.Name,column.GetPrefix("C#"),column.Name);
+					Out.WriteLine("cmd.Parameters.Add(param);");
+					Out.WriteLine("");
+				}
+			}
+			
+			Out.IndentLevel = 0;
+		%>
+			//	open connection
+			conn.Open();
+			//	Execute command
+			cmd.ExecuteNonQuery();
+			//	get return value
+			int retValue = 0;
+			try {
+				//	get return value of the sproc
+				retValue = (int)cmd.Parameters["@RETURN_VALUE"].Value;
+			} catch(System.Exception) {	//	catch all possible exceptions
+				retValue = 0;	//	set retValue To 0 (all ok)
+			}
+			
+			//	close connection
+			conn.Close();
+		
+		
+			return retValue;
+		}
+		
+		public static int Update(b<%=objTable.Name%> obj<%=objTable.Name%>,SqlConnection sqlConn,SqlTransaction sqlTran) {
+			//	construct new connection and command objects
+			SqlConnection conn = sqlConn;
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name,updateSuffix)%>", conn);
+			cmd.Transaction=sqlTran;
+		
+			SqlParameter param;
+		
+			//	add return value param
+			param = new SqlParameter("@RETURN_VALUE",SqlDbType.Int);
+			param.Direction = ParameterDirection.ReturnValue;
+			cmd.Parameters.Add(param);
+		
+			//	add params
+		<%	Out.IndentLevel = 2;
+		
+			if(objTable.PrimaryKeyColumns.Count > 0) {
+				foreach(Column column in objTable.PrimaryKeyColumns) {
+					Out.WriteLine("param = new SqlParameter(\"@{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+					Out.WriteLine("param.Direction = ParameterDirection.Input;");
+					Out.WriteLine("param.Value=obj{0}.m_{1}{2};",objTable.Name,column.GetPrefix("C#"),column.Name);
+					Out.WriteLine("cmd.Parameters.Add(param);");
+					Out.WriteLine(""); 
+				}
+			}
+			
+			foreach(Column column in objTable.Columns) {
+				// check if  columnstringnot a key
+				if(!column.IsInPrimaryKey) {
+					Out.WriteLine("param = new SqlParameter(\"@{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+					Out.WriteLine("param.Direction = ParameterDirection.Input;");
+					Out.WriteLine("param.Value=obj{0}.m_{1}{2};",objTable.Name,column.GetPrefix("C#"),column.Name);
+					Out.WriteLine("cmd.Parameters.Add(param);");
+					Out.WriteLine("");
+				}
+			}
+			
+			Out.IndentLevel = 0;
+		%>
+		
+			//	Execute command
+			cmd.ExecuteNonQuery();
+			//	get return value
+			int retValue = 0;
+			try {
+				//	get return value of the sproc
+				retValue = (int)cmd.Parameters["@RETURN_VALUE"].Value;
+			} catch(System.Exception) {	//	catch all possible exceptions
+				retValue = 0;	//	set retValue To 0 (all ok)
+			}
+			
+		
+			return retValue;
+		}
+		
+		public static int Delete(b<%=objTable.Name%> obj<%=objTable.Name%>) {
+			//	construct new connection and command objects
+			SqlConnection conn = DBHelper.getConnection();
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name, deletebyparamsSuffix)%>", conn);
+		
+			SqlParameter param;
+		
+			//	add return value param
+			param = new SqlParameter("@RETURN_VALUE",SqlDbType.Int);
+			param.Direction = ParameterDirection.ReturnValue;
+			cmd.Parameters.Add(param);
+		
+			//	Add params
+		<%	Out.IndentLevel = 2;
+			
+			foreach(Column column in objTable.Columns) {
+				Out.WriteLine("param = new SqlParameter(\"@{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+				Out.WriteLine("param.Direction = ParameterDirection.Input;");
+				Out.WriteLine("param.Value=obj{0}.m_{1}{2};",objTable.Name,column.GetPrefix("C#"),column.Name);
+				Out.WriteLine("cmd.Parameters.Add(param);");
+				Out.WriteLine("");
+			}	
+			
+			Out.IndentLevel = 0;
+		%>
+			//	open connection
+			conn.Open();
+			//	Execute command
+			cmd.ExecuteNonQuery();
+			//	get return value
+			int retValue = 0;
+			try {
+				//	get return value of the sproc
+				retValue = (int)cmd.Parameters["@RETURN_VALUE"].Value;
+			} catch(System.Exception) {	//	catch all possible exceptions
+				retValue = 0;	//	set retValue To 0 (all ok)
+			}
+			//	close connection
+			conn.Close();
+			
+			return retValue;
+		}
+		
+		public static int Delete(b<%=objTable.Name%> obj<%=objTable.Name%>,SqlConnection sqlConn,SqlTransaction sqlTran) {
+			//	construct new connection and command objects
+			SqlConnection conn = sqlConn;
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name, deletebyparamsSuffix)%>", conn);
+			cmd.Transaction=sqlTran;
+			
+			SqlParameter param;
+		
+			//	add return value param
+			param = new SqlParameter("@RETURN_VALUE",SqlDbType.Int);
+			param.Direction = ParameterDirection.ReturnValue;
+			cmd.Parameters.Add(param);
+		
+			//	Add params
+		<%	Out.IndentLevel = 2;
+			
+			foreach(Column column in objTable.Columns) {
+				Out.WriteLine("param = new SqlParameter(\"@{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+				Out.WriteLine("param.Direction = ParameterDirection.Input;");
+				Out.WriteLine("param.Value=obj{0}.m_{1}{2};",objTable.Name,column.GetPrefix("C#"),column.Name);
+				Out.WriteLine("cmd.Parameters.Add(param);");
+				Out.WriteLine("");
+			}	
+			
+			Out.IndentLevel = 0;
+		%>
+		
+			//	Execute command
+			cmd.ExecuteNonQuery();
+			//	get return value
+			int retValue = 0;
+			try {
+				//	get return value of the sproc
+				retValue = (int)cmd.Parameters["@RETURN_VALUE"].Value;
+			} catch(System.Exception) {	//	catch all possible exceptions
+				retValue = 0;	//	set retValue To 0 (all ok)
+			}
+		
+			
+			return retValue;
+		}
+		
+		<% Out.WriteLine("#endregion"); %>
+		<% Out.WriteLine("#region Public Functions"); %>
+	<%if(objTable.PrimaryKeyColumns.Count > 0) {
+	%>
+		/// <summary>
+		/// Fills the member variables of the Object from the DB based On the primary key, returns true if success.
+		/// </summary>
+		/// <param name="pk">PK struct</param>
+		/// <returns>true member variables filled.</returns>
+		public bool Load(PK pk) {
+			return Load(<%
+			
+			for(i = 0; i<objTable.PrimaryKeyColumns.Count; i++) {
+				Column column = objTable.PrimaryKeyColumns[i];
+	
+				Out.Write("pk.{0}.Value", column.Name);
+	
+				if(i != objTable.PrimaryKeyColumns.Count-1) {
+					Out.Write(", ");
+				} else {
+					Out.Write(");");
+				}
+			}
+	}
+	%>
+		}
+	
+		/// <summary>
+		/// Fills the member variables of the Object from the DB based on the primary key, returns true if success.
+		/// </summary>
+	<%	
+	foreach(Column column in objTable.PrimaryKeyColumns) {	
+	%>	<%Out.WriteLine("/// <param name=\"{0}{1}\"> {1} key value</param>", column.GetPrefix("C#"), column.Name);	
+	}
+	%>	/// <returns>true if success</returns>
+		public bool <%=selectPrefix%>(<%
+		for(int j = 0; j<objTable.PrimaryKeyColumns.Count; j++) {
+			Column column = objTable.PrimaryKeyColumns[j];
+	
+			Out.Write("{0} {1}{2}", column.AdoNetMapping, column.GetPrefix("C#"), column.Name);
+	
+			if(j != objTable.PrimaryKeyColumns.Count - 1) {
+				Out.Write(", ");
+			} else {
+				Out.Write(")");
+			}
+		}	
+	%> {	
+			//	construct new connection and command objects
+			SqlConnection conn = DBHelper.getConnection();
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name, loadSuffix)%>", conn);
+		
+			SqlParameter param;
+		
+				//	Add params
+	<%		Out.IndentLevel = 2;
+				
+				foreach(Column column in objTable.PrimaryKeyColumns) {
+					foreach(string s in CSharpHelper.MakeParameter(column, "param", "Input")) {
+						Out.WriteLine(s);			
+					}
+					Out.WriteLine("cmd.Parameters.Add(param);");
+					Out.WriteLine("");
+				}
+				
+				Out.IndentLevel = 0;
+	%>		//	open connection
+				conn.Open();
+				//	Execute command And get reader
+				SqlDataReader reader = cmd.ExecuteReader();
+		
+				bool found = false;	//	false solution
+		
+				//	check if  anything was found
+				if(reader.Read()) {
+					found = true;	//	corresponding row found
+					m_aAction = Action.Update;	//	future action
+		
+					//	set member values
+		<%	Out.IndentLevel = 3;
+		
+			i = 0;
+			foreach(Column column in objTable.Columns) {
+				Out.WriteLine("m_{0}{1} = reader.{2}({3});", column.GetPrefix("C#"), column.Name, column.AdoNetMapping.SqlAccessor, i);
+				i++;
+			}
+			
+			Out.IndentLevel = 0;
+			
+				%>
+		
+			} else {
+			//	set key values
+		<%	Out.IndentLevel = 3;
+		
+			for(int j = 0; j<objTable.PrimaryKeyColumns.Count; j++) {
+				Column column = objTable.PrimaryKeyColumns[j];
+		
+				Out.WriteLine("m_{0}{1} = {0}{1};", column.GetPrefix("C#"), column.Name);
+			}
+			
+			Out.IndentLevel = 0;
+		%>	}
+		
+			reader.Close();
+			//	close connection
+			conn.Close();
+			//	set dirty flag To false
+			m_bIsDirty = false;
+			//	return true if  a row found, otherwise false
+			return found;
+			
+		}
+	<%
+	}
+	%>
+	
+		/// <summary>
+		/// Updates the DB.
+		/// </summary>
+		/// <returns>0 if success</returns>
+		public int <%=savePrefix%>() {
+			int retValue;
+			switch(m_aAction) {
+				case Action.Insert:
+					//	insert row
+					retValue = ins();
+					//	future action To be update
+					m_aAction = Action.Update;
+					//	return retValue from insert
+					return retValue;
+				case Action.Update:
+					//	check if  Objectstringdirty
+					if (m_bIsDirty)	{
+						//	update row And return retValue
+						return upd();
+					} else {
+						//	return 0 (all ok)
+						return 0;
+					}
+				case Action.Delete:
+					//	delete row
+					retValue = del();
+					//	future action To be insert
+					m_aAction = Action.Insert;
+					//	return retValue from delete
+					return retValue;
+			}
+	
+			throw new System.Exception("Unknown action.");
+		}
+	
+		/// <summary>
+		/// Deletes the Object from the DB.
+		/// </summary>
+		/// <returns>0 if success</returns>
+		public int <%=deletePrefix%>() {
+			m_aAction = Action.Delete;	//	actionstringdelete
+			return <%=savePrefix%>();
+		}
+	
+		public DataSet <%=selectbyparamsPrefix%>() {
+            SqlConnection conn = DBHelper.getConnection();
+            SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name, loadbyparamsSuffix)%>", conn);
+
+			SqlParameter param;
+		
+			//	Add return value param
+			param = new SqlParameter("@RETURN_VALUE",SqlDbType.Int);
+			param.Direction = ParameterDirection.ReturnValue;
+			cmd.Parameters.Add(param);
+		
+			//	Add params
+		<%		Out.IndentLevel = 2;
+			
+				foreach(Column column in objTable.Columns) {
+					
+					Out.WriteLine("param = new SqlParameter(\"@{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+					Out.WriteLine("param.Direction = ParameterDirection.Input;");
+					Out.WriteLine("param.Value=m_{0}{1};", column.GetPrefix("C#"),column.Name);
+					Out.WriteLine("cmd.Parameters.Add(param);");
+					Out.WriteLine("");
+					if (column.SQLDatatype=="datetime")
+					{
+						Out.WriteLine("param = new SqlParameter(\"@Before_{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+						Out.WriteLine("param.Direction = ParameterDirection.Input;");
+						Out.WriteLine("param.Value=m_FindBefore_{0}{1};",column.GetPrefix("C#"),column.Name);
+						Out.WriteLine("cmd.Parameters.Add(param);");
+						Out.WriteLine("");
+						
+						Out.WriteLine("param = new SqlParameter(\"@After_{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+						Out.WriteLine("param.Direction = ParameterDirection.Input;");
+						Out.WriteLine("param.Value=m_FindAfter_{0}{1};", column.GetPrefix("C#"),column.Name);
+						Out.WriteLine("cmd.Parameters.Add(param);");
+						Out.WriteLine("");
+					}
+				}
+				
+				Out.IndentLevel = 0;
+	%>	
+			//	open connection
+			conn.Open();
+
+            DataSet ds = new DataSet();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(ds);
+			// close connection
+			conn.Close();
+			
+            return ds;
+        }
+		
+		public DataSet <%=selectbyparamsPrefix%>(SqlConnection sqlConn,SqlTransaction sqlTran) 
+		{
+			SqlConnection conn = sqlConn;
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name, loadbyparamsSuffix)%>", conn);
+			cmd.Transaction=sqlTran;
+			
+			SqlParameter param;
+		
+			//	Add return value param
+			param = new SqlParameter("@RETURN_VALUE",SqlDbType.Int);
+			param.Direction = ParameterDirection.ReturnValue;
+			cmd.Parameters.Add(param);
+		
+			//	Add params
+		<%		Out.IndentLevel = 2;
+			
+				foreach(Column column in objTable.Columns) {
+					
+					Out.WriteLine("param = new SqlParameter(\"@{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+					Out.WriteLine("param.Direction = ParameterDirection.Input;");
+					Out.WriteLine("param.Value=m_{0}{1};", column.GetPrefix("C#"),column.Name);
+					Out.WriteLine("cmd.Parameters.Add(param);");
+					Out.WriteLine("");
+					if (column.SQLDatatype=="datetime")
+					{
+						Out.WriteLine("param = new SqlParameter(\"@Before_{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+						Out.WriteLine("param.Direction = ParameterDirection.Input;");
+						Out.WriteLine("param.Value=m_FindBefore_{0}{1};",column.GetPrefix("C#"),column.Name);
+						Out.WriteLine("cmd.Parameters.Add(param);");
+						Out.WriteLine("");
+						
+						Out.WriteLine("param = new SqlParameter(\"@After_{0}\", {1});",column.Name,column.AdoNetMapping.SqlDbType.ToString()); 
+						Out.WriteLine("param.Direction = ParameterDirection.Input;");
+						Out.WriteLine("param.Value=m_FindAfter_{0}{1};", column.GetPrefix("C#"),column.Name);
+						Out.WriteLine("cmd.Parameters.Add(param);");
+						Out.WriteLine("");
+					}
+				}
+				
+				Out.IndentLevel = 0;
+	%>	
+
+            DataSet ds = new DataSet();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(ds);
+
+            return ds;
+        }
+		
+		<% Out.WriteLine("#endregion "); %>
+		<% Out.WriteLine("#region Private Functions"); %>
+		/// <summary>
+		/// The init Function.
+		/// </summary>
+		protected void Init() {
+			m_aAction = Action.Insert;	//	initial action
+			m_bIsDirty = false;	//	Objectstring"clean" upon init
+		}
+		
+		protected int ins() {
+			//	construct new connection and command objects
+			SqlConnection conn = DBHelper.getConnection();
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name, insertSuffix)%>", conn);
+			
+			SqlParameter param;
+		
+			//	Add return value param
+			param = new SqlParameter("@RETURN_VALUE",SqlDbType.Int);
+			param.Direction = ParameterDirection.ReturnValue;
+			cmd.Parameters.Add(param);
+		
+			//	Add params
+		<%	Out.IndentLevel = 2;
+		
+			foreach(Column column in objTable.Columns) {
+				foreach(string s in CSharpHelper.MakeParameter(column, "param", "Input", "m_")) {
+					Out.WriteLine(s);
+				}
+				
+				Out.WriteLine("cmd.Parameters.Add(param);");
+				Out.WriteLine("");					
+			}
+			
+			Out.IndentLevel = 0;
+		%>		
+			//	open connection
+			conn.Open();
+			//	Execute command
+			cmd.ExecuteNonQuery();
+			//	get return value
+			int retValue = 0;
+			try {
+				//	get return value of the sproc
+				retValue = (int)cmd.Parameters["@RETURN_VALUE"].Value;
+			} catch(System.Exception) {	//	catch all possible exceptions
+				retValue = 0;	//	set retValue To 0 (all ok)
+			}
+			//	close connection
+			conn.Close();
+		
+			//	set dirty flag To false
+			m_bIsDirty = false;
+			<%
+				foreach(Column column in objTable.Columns) {
+					if(column.IsIdentity)
+					{
+						Out.WriteLine("if (retValue != 0)");
+						if (column.AdoNetMapping.CLRType != "Int32")
+							Out.WriteLine("\t\t\t\t{0} = ({1})retValue;",column.Name,column.AdoNetMapping.CLRType);
+						else
+							Out.WriteLine("\t\t\t\t{0} = retValue;",column.Name);
+					}
+				}
+			%>
+			return retValue;
+		}
+	
+		/// <summary>
+		/// Updates the Object To the DB.
+		/// </summary>
+		/// <returns>0 if success</returns>
+		protected int upd() {
+			//	construct new connection and command objects
+			SqlConnection conn = DBHelper.getConnection();
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name,updateSuffix)%>", conn);
+		
+			SqlParameter param;
+		
+			//	add return value param
+			param = new SqlParameter("@RETURN_VALUE",SqlDbType.Int);
+			param.Direction = ParameterDirection.ReturnValue;
+			cmd.Parameters.Add(param);
+		
+			//	add params
+		<%	Out.IndentLevel = 2;
+		
+			if(objTable.PrimaryKeyColumns.Count > 0) {
+				foreach(Column column in objTable.PrimaryKeyColumns) {
+					foreach(string s in CSharpHelper.MakeParameter(column, "param", "Input", "m_")) {
+						Out.WriteLine(s);
+					}
+					
+					Out.WriteLine("cmd.Parameters.Add(param);");
+					Out.WriteLine("");
+				}
+			}
+			
+			foreach(Column column in objTable.Columns) {
+				// check if  columnstringnot a key
+				if(!column.IsInPrimaryKey) {
+					foreach(string s in CSharpHelper.MakeParameter(column, "param", "Input", "m_")) {
+						Out.WriteLine(s);
+					}
+					
+					Out.WriteLine("cmd.Parameters.Add(param);");
+					Out.WriteLine("");			
+				}
+			}
+			
+			Out.IndentLevel = 0;
+		%>
+			//	open connection
+			conn.Open();
+			//	Execute command
+			cmd.ExecuteNonQuery();
+			//	get return value
+			int retValue = 0;
+			try {
+				//	get return value of the sproc
+				retValue = (int)cmd.Parameters["@RETURN_VALUE"].Value;
+			} catch(System.Exception) {	//	catch all possible exceptions
+				retValue = 0;	//	set retValue To 0 (all ok)
+			}
+			
+			//	close connection
+			conn.Close();
+		
+			//	set dirty flag To false
+			m_bIsDirty = false;
+		
+			return retValue;
+		}
+	
+		/// <summary>
+		/// Deletes the Object from the DB.
+		/// </summary>
+		/// <returns>0 if success</returns>
+		protected int del() {
+			//	construct new connection and command objects
+			SqlConnection conn = DBHelper.getConnection();
+			SqlCommand cmd = DBHelper.getSprocCmd("<%=string.Concat(sprocPrefix, objTable.Name, deleteSuffix)%>", conn);
+		
+			SqlParameter param;
+		
+			//	add return value param
+			param = new SqlParameter("@RETURN_VALUE",SqlDbType.Int);
+			param.Direction = ParameterDirection.ReturnValue;
+			cmd.Parameters.Add(param);
+		
+			//	Add params
+		<%	Out.IndentLevel = 2;
+			
+			foreach(Column column in objTable.PrimaryKeyColumns) {
+				foreach(string s in CSharpHelper.MakeParameter(column, "param", "Input", "m_")) {
+					Out.WriteLine(s);
+				}
+				
+				Out.WriteLine("cmd.Parameters.Add(param);");
+				Out.WriteLine("");		
+			}	
+			
+			Out.IndentLevel = 0;
+		%>
+			//	open connection
+			conn.Open();
+			//	Execute command
+			cmd.ExecuteNonQuery();
+			//	get return value
+			int retValue = 0;
+			try {
+				//	get return value of the sproc
+				retValue = (int)cmd.Parameters["@RETURN_VALUE"].Value;
+			} catch(System.Exception) {	//	catch all possible exceptions
+				retValue = 0;	//	set retValue To 0 (all ok)
+			}
+			//	close connection
+			conn.Close();
+			
+			//	set dirty flag To false
+			m_bIsDirty = false;
+		
+			return retValue;
+		}
+		<% Out.WriteLine("#endregion"); %>
+		<% Out.WriteLine("#region Operator Functions"); %>
+	
+		//	operators
+		/// <summary>
+		/// Compares two objects
+		/// </summary>
+		/// <param name="t1">The first Object To compare</param>
+		/// <param name="t2">The Second Object To compare</param>
+		/// <returns>true if success</returns>
+		public static bool operator ==(b<%=objTable.Name%> t1, b<%=objTable.Name%> t2) {
+			//	compare values
+	<%
+		foreach(Column objColumn in objTable.Columns) {
+	%>		if(<%		
+			Out.Write("t1.m_{0}{1} != t2.m_{0}{1}", objColumn.GetPrefix("C#"), objColumn.Name); 
+	%>) {
+				return false;	//	because "<%=objColumn.Name%>" values are Not equal
+			}
+	
+	<%	}
+	%>		return true;	//	because every Valuestringequal
+		}
+	
+		/// <summary>
+		/// Compares two objects
+		/// </summary>
+		/// <param name="t1">The first Object To compare</param>
+		/// <param name="t2">The Second Object To compare</param>
+		/// <returns>true if success</returns>
+		public static bool operator !=(b<%=objTable.Name%> t1, b<%=objTable.Name%> t2) {
+			return !(t1 == t2);
+		}
+		<% Out.WriteLine("#endregion"); %>	
+		<% Out.WriteLine("#region Override Functions"); %>
+		//	Object methods
+		
+		/// <summary>
+		/// Overrides the ToString Function.
+		/// </summary>
+		/// <returns>The string representation of the Object</returns>
+		public override string ToString() {
+			System.Text.StringBuilder retValue = new System.Text.StringBuilder("Keys:\n");		
+	<%	
+		foreach(Column column in objTable.PrimaryKeyColumns) {	
+	%>
+			retValue.Append(" <%=column.Name%> = \"");
+			retValue.Append(m_<%Out.Write("{0}{1}", column.GetPrefix("C#"), column.Name);%>);
+			retValue.Append("\"\n");
+	<%	}	
+	%>		
+			retValue.Append("Columns:\n");
+	<%
+		foreach(Column column in objTable.Columns) {
+			if(!column.IsInPrimaryKey) {
+	%>
+			retValue.Append("    <%=column.Name%> = \"");
+			retValue.Append(m_<%=(column.GetPrefix("C#") + column.Name)%>);
+			retValue.Append("\"\n");
+	<%		}
+		}	
+	%>
+			return retValue.ToString();
+		}
+	
+		/// <summary>
+		/// Overrides the Equals Function.
+		/// </summary>
+		/// <param name="o">The Object To compare With</param>
+		/// <returns>Bool if the two objects are identical.</returns>
+		public override bool Equals(System.Object o) {
+			//	check the type of o
+			if (!(o is <%=inheritedClassName%>)) {
+				//	types Not the same, return false
+				return false;
+			}
+	
+			//	compare objects And return retValue
+			return this == (<%=inheritedClassName%>)o;
+		}
+	
+		/// <summary>
+		/// Overrides the GetHashCode Function.
+		/// </summary>
+		/// <returns>Bool if the two objects are identical.</returns>
+		public override int GetHashCode() {
+			return this.ToString().GetHashCode();
+		}
+		<% Out.WriteLine("#endregion"); %>	
+	}
+}
+]]></templatecode>
+</template>

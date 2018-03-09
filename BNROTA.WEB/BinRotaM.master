@@ -1,0 +1,52 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="BinRotaM.master.cs" Inherits="BinRotaM" %>
+<%@ Register Assembly="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Namespace="System.Web.UI" TagPrefix="asp" %>
+<%@ Register Src="UserControls/Common/uctrlMainHeader.ascx" TagName="uctrlMainHeader"
+    TagPrefix="uc1" %>
+<%@ Register Src="UserControls/Common/uctrlMainFooter.ascx" TagName="uctrlMainFooter"
+    TagPrefix="uc2" %>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>BINROTA</title>
+    <link rel="stylesheet" runat="server" type="text/css" href="Styles/Tag.css" />
+    <link rel="stylesheet" runat="server" type="text/css" href="Styles/Format.css" />
+    <link rel="stylesheet" runat="server" type="text/css" href="Styles/Text.css" />
+    <link rel="stylesheet" runat="server" type="text/css" href="Styles/Form.css" />
+    <link rel="stylesheet" runat="server" type="text/css" href="Styles/Paging.css" />
+    <script language="javascript" src="Scripts/Custom.js"></script>
+    
+</head>
+<body>
+    <form id="form1" runat="server" submitdisabledcontrols="true">
+        <asp:ScriptManager ID="ScriptManager1" runat="server">
+        </asp:ScriptManager>
+    <div>
+
+        <table width="1004" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <uc1:uctrlMainHeader id="UctrlMainHeader1" runat="server">
+                </uc1:uctrlMainHeader></td>
+        </tr>
+        <tr>
+            <td>
+                <asp:contentplaceholder id="ContentPlaceHolder1" runat="server">
+        
+                </asp:contentplaceholder>
+            </td>
+        </tr>
+        <tr>
+            <td class="VSpace"></td>
+        </tr>
+        <tr>
+            <td>
+                <uc2:uctrlMainFooter ID="UctrlMainFooter1" runat="server" />
+            </td>
+        </tr>
+        </table>
+    </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,79 @@
+using System;
+using System.Drawing;
+using System.Collections;
+using System.ComponentModel;
+using DevExpress.XtraReports.UI;
+
+/// <summary>
+/// Summary description for XtraRptForPdfConvert
+/// </summary>
+public class XtraRptForPdfConvert : DevExpress.XtraReports.UI.XtraReport
+{
+    private DevExpress.XtraReports.UI.DetailBand Detail;
+    private XRRichText rtbPageContent;
+    /// <summary>
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    public XtraRptForPdfConvert()
+    {
+        InitializeComponent();
+        //
+        // TODO: Add constructor logic here
+        //
+    }
+
+    /// <summary> 
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && (components != null))
+        {
+            components.Dispose();
+        }
+        base.Dispose(disposing);
+    }
+
+    #region Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        string resourceFileName = "XtraRptForPdfConvert.resx";
+        System.Resources.ResourceManager resources = Resources.XtraRptForPdfConvert.ResourceManager;
+        this.Detail = new DevExpress.XtraReports.UI.DetailBand();
+        this.rtbPageContent = new DevExpress.XtraReports.UI.XRRichText();
+        ((System.ComponentModel.ISupportInitialize)(this.rtbPageContent)).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
+        // 
+        // Detail
+        // 
+        this.Detail.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.rtbPageContent});
+        this.Detail.Height = 494;
+        this.Detail.Name = "Detail";
+        // 
+        // rtbPageContent
+        // 
+        this.rtbPageContent.Location = new System.Drawing.Point(0, 0);
+        this.rtbPageContent.Name = "rtbPageContent";
+        this.rtbPageContent.RtfText = ((DevExpress.XtraReports.UI.SerializableString)(resources.GetObject("rtbPageContent.RtfText")));
+        this.rtbPageContent.Size = new System.Drawing.Size(650, 317);
+        // 
+        // XtraRptForPdfConvert
+        // 
+        this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
+            this.Detail});
+        ((System.ComponentModel.ISupportInitialize)(this.rtbPageContent)).EndInit();
+        ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
+
+    }
+
+    #endregion
+}

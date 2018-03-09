@@ -1,0 +1,7 @@
+bin\Debug\BINROTA.DAL.dll
+bin\Debug\BINROTA.DAL.pdb
+bin\Debug\CARETTA.DBI.dll
+bin\Debug\CARETTA.DBI.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\BINROTA.DAL.dll
+obj\Debug\BINROTA.DAL.pdb

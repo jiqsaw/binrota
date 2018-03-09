@@ -1,0 +1,406 @@
+.Top{
+	background-position:left top;
+	background-image: url(../Images/BackGrounds/TopBg.jpg);
+	background-repeat: repeat-x;
+	height:167px;
+	vertical-align: top ;
+}
+
+.PageBottom
+{
+	background-position:left top;
+	background-image: url(../Images/BackGrounds/PageBottomBg.jpg);
+	background-repeat: repeat-x;
+	height:53px;
+}
+
+.TopMenu {
+	font-family: Trebuchet MS; 
+	font-size: 12px; 
+	height:41px;
+	color : #FFFFFF;
+	padding-top:1px;
+}
+ 
+.MainNews {
+ 	background-image: url(../Images/BackGrounds/MainNewsBg.jpg);
+	width: 419px;
+	height: 158px;
+}
+
+.News {
+	width: 419px;
+	height: 57px;
+	background-image: url(../Images/BackGrounds/NewsBg.jpg);
+	background-repeat: repeat-x;
+	background-position: left bottom;
+}
+
+
+.TripCategories{
+	background-color:#FFFFFF;
+	background-image: url(../Images/BackGrounds/TripCategoriesBg.jpg);
+	background-position:left bottom;
+	background-repeat: repeat-x;
+	font-family: Arial; 
+	font-size: 11px;
+	font-weight: bold;
+	color:#000000 ;
+}
+
+.MainCities
+{
+	background-image: url(../Images/BackGrounds/CitiesBg.jpg);
+	font-family: Trebuchet MS; 
+	font-size: 11px; 
+	color:#9FB5BE;
+	font-weight: bold;
+}
+
+.Author
+{
+	background-position:left top;
+	background-image: url(../Images/BackGrounds/Author2Bg.jpg);
+	background-repeat: repeat-x;
+	border: #CCF7FE solid 1px;
+	background-color:#FF0000;
+}
+
+.ImgGallery {
+	border: #e9edee solid 3px;
+}
+
+.SearchBox {
+	filter: alpha(opacity:100);
+	width:271px;
+	background-image: url(../Images/BackGrounds/SearchBoxBg.jpg);
+	border-width: 0px;
+	height:26px;
+	font-family: Tahoma;
+	font-size: 11px;
+	color: #8584A0;
+	padding-top:8px;
+}
+
+.Questionnaire
+{
+	background-color: #FFF;
+	font-family: Tahoma;
+	font-size: 11px;
+	padding-left:9px;
+	color: #333D3F;	
+	width: 100% ;
+	padding-top: 5px;
+	padding-bottom:5px;
+	vertical-align:middle;
+}
+
+.AnketQuestion {
+	font-family: Trebuchet MS; 
+	font-size: 12px;
+	font-weight: bold;
+	color:#2c527a;
+	padding-top: 10px;
+	padding-bottom: 10px;
+ 	line-height:1.3;
+}
+
+.Forum {
+	background-color:#f0f0f0;
+	height:42px;
+	padding-left: 11px;
+	vertical-align: middle;
+	font-family: Tahoma;
+	font-size: 11px;
+	color: #333D3F;
+}
+
+.TopBottom7 {
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+
+.Content{
+	width: 970;
+	border-width: 0px;
+}
+
+.RegionBottomTd{
+	background-color: #FFFFFF;	
+	height:38px;
+	color:#5E82A6;
+	padding-left:14px;
+	padding-right:14px;
+	padding-top:7px;
+	font-weight: bold;
+}
+
+.ForumSepTd{
+	height: 5px;
+}
+
+.TripSepTd{
+	height: 1px;
+	background-color: #CDE4F2 ;
+}
+
+.AnketSepTd{
+	height: 1px;
+	background-image: url(../Images/BackGrounds/AnketSepBg.jpg);
+}
+
+.DegradeBack{
+	background-position:left top;
+	background-image: url(../Images/BackGrounds/AuthorBg.jpg);
+	background-repeat: repeat-x;
+	background-color:#E5F8FF;
+}
+
+.SurveyBack{
+	background-position:left top;
+	background-image: url(../Images/BackGrounds/SurveyBack.jpg);
+	background-repeat: no-repeat;
+	background-color:#FFFFFF;
+}
+
+.DegradeBottom{
+	background-position:left bottom;
+	background-image: url(../Images/BackGrounds/AuthorBg.jpg);
+	background-repeat: repeat-x;
+	background-color:#FFFFFF;
+	height: 678px;
+}
+
+.LogoBack{
+	background-position: right top;
+	background-image: url(../Images/BackGrounds/LogoBack.jpg);
+	background-repeat: no-repeat;
+	background-color:#FFFFFF;
+}
+
+.Padding6px{
+	padding-left:6px;
+	padding-right:6px; 
+	padding-top:6px;
+}
+
+.VSpace {
+	height: 8px;
+}
+
+.HSpace {
+	width: 8px;
+}
+
+.dvScroll {
+	position: absolute;
+	overflow-y: auto;
+	z-index: 2;
+}
+
+.Scroll {
+	scrollbar-3dlight-color : #DFDFDF;
+	scrollbar-arrow-color : #FFFFFF;
+	scrollbar-base-color : #DFDFDF;
+	scrollbar-darkshadow-color : #DFDFDF;
+	scrollbar-face-color : #DFDFDF;
+	scrollbar-highlight-color : #FFFFFF;
+	scrollbar-shadow-color : #FFFFFF;
+	scrollbar-track-color : #FFFFFF;
+}
+
+.SubContent {
+	background-color:#FFFFFF;
+}
+
+.SubCItemHeader {
+	background-color:#FFFFFF;
+	width:290px;
+	padding-left:14px;
+	padding-bottom:14px;
+	padding-top:20px;
+	color: #5E82A6;
+	font-family: Trebuchet MS; 
+	font-size: 12px;	
+}
+
+.SMapSearch {
+	height:31px;
+	background-image: url(../Images/BackGrounds/MapSearchBg.jpg);
+	background-repeat: repeat-x;
+	font-family: Trebuchet MS; 
+	font-size: 12px;
+	color:#5E82A6; 
+	padding-right:15px;
+}
+
+.PlottedSepTd{
+	height: 1px;
+	background-image: url(../Images/BackGrounds/AnketSepBg.jpg);
+}
+
+.SearchAuthor{
+	width:267px;
+	height:60px;
+	background-image: url(../Images/BackGrounds/SearchAuthorBg.jpg);
+}
+
+
+.MemberInfo{
+	border : 1px dotted #C1C1C1;
+	background-color: #e1ecf8;
+	/*background-image: url(../Images/BackGrounds/MemberInfoBg.jpg);*/
+}
+
+.PhotoGalleryBack{
+	background-image: url(../Images/BackGrounds/PhotoGalleryBack.jpg);
+}
+
+
+.StripedBottom{
+	height:37px;
+	background-image: url(../Images/BackGrounds/StripedBottomBg.jpg);
+}
+
+.DegradeSPage{
+	background-image: url(../Images/BackGrounds/DegradeSPageBg.jpg);
+	background-position:left top;
+	background-repeat: repeat-x;
+	background-color:#63A5D5;
+}
+
+.DottedBorder{
+	border : 1px dotted #C1C1C1;
+}
+
+.ReverseDegrade{
+	background-image: url(../Images/BackGrounds/CountryDetailBg.jpg);
+	background-position:left top;
+	background-repeat: repeat-x;
+	background-color:#FFFFFF;
+	height: 963px;
+}
+
+.CountryAttribute{
+	width:88;
+	background-color:#49A0CD;
+	font-family: Tahoma;
+	font-size: 11px;
+	color:#ffffff;
+	padding:4px;
+	font-weight: bold;
+	vertical-align:top;
+}
+
+.CountryAttrDesc{
+	width:266;
+	background-color:#F2FFEE;
+	font-family: Tahoma;
+	font-size: 11px;
+	color:#0E41C3;
+	padding:4px;
+}
+
+.CountryCities{
+	font-family: Tahoma;
+	font-size: 11px;
+	color:#7F5A66;
+	background-color:#FFFFFF;
+	padding:4px;
+	cursor:pointer;
+}
+
+.DegradeBlue{
+	background-image: url(../Images/BackGrounds/DegradeBlueBg.jpg);
+	background-position:left bottom;
+	background-repeat: repeat-x;
+	background-color:#F5FAFD;
+}
+
+.SearchResultItem {
+	background-image: url(../Images/BackGrounds/SearchResultItemBack.jpg);
+	background-position:left top;
+	background-repeat: repeat-x;
+	background-color:#FFFFFF;
+}
+
+
+.SearchResultItemOver {
+	background-image: url(../Images/BackGrounds/SearchResultItemBack2.jpg);
+	background-position:left top;
+	background-repeat: repeat-x;
+	background-color:#FFFFFF;
+	cursor: pointer;
+}
+
+.PageDetailExtraInfoHeader {
+	padding-top: 9px;
+	color: #449434;
+}
+
+.PageDetailExtraInfoText {
+	background-color: #8a98cc; 
+	padding: 8px 5px 8px 5px;
+	color: #FFF;
+}
+
+.AboutUs{
+	background-color: White;
+	font-size: 12px;
+	color: #5E82A6;
+	font-family: Tahoma;
+}
+
+.CountryAndCityTbl {
+	vertical-align: top; 
+	border: solid 4px #FFF; 
+	text-align: center; 
+	width: 695;
+}
+
+.SearchMap {
+	width: 515px; 
+	height: 254px; 
+}
+
+.dvCountriesBack {
+	display: none;
+	width: 532px; 
+	height: 278px; 
+}
+
+.CalendarActive
+{
+	background-position:left top;
+	background-image: url(../Images/BackGrounds/ActiveActivityBg.jpg);
+	background-repeat: no-repeat;
+	height:131px;
+	width:135px;
+}
+
+.CalendarPassive
+{
+	background-position:left top;
+	background-image: url(../Images/BackGrounds/PassiveActivityBg.jpg);
+	background-repeat: no-repeat;
+	height:131px;
+	width:135px;
+}
+
+.CalendarOutDate
+{
+	background-position:left top;
+	background-image: url(../Images/BackGrounds/OutDateActivityBg.jpg);
+	background-repeat: no-repeat;
+	height:131px;
+	width:135px;
+}
+
+.BackLogoColor
+{
+	background-position:left bottom;
+	background-image: url(../Images/BackGrounds/BackLogoColor.jpg);
+	background-color: #edf2d4;
+	background-repeat: repeat-x;
+	height: 40px;
+}

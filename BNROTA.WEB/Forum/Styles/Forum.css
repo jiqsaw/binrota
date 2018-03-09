@@ -1,0 +1,83 @@
+﻿SELECT {
+	FONT-FAMILY: Arial,Helvetica,sans-serif;
+	FONT-SIZE: 11px;
+	COLOR: #000000;
+	BACKGROUND-COLOR: #CFCFCF
+}
+TEXTAREA, .bginput {
+	FONT-SIZE: 12px;
+	FONT-FAMILY: Tahoma,Helvetica,sans-serif;
+	COLOR: #000000;
+	BACKGROUND-COLOR: #CFCFCF
+}
+A.ForumLink:link, A.ForumLink:visited, A.ForumLink:active {
+	text-decoration:underline;
+	color:#5E82A6;
+}
+A.ForumLink:hover {
+	text-decoration:none;
+	color:#5E82A6;
+}
+#cat A:link, #cat A:visited, #cat A:active {
+	COLOR: #ffffff;
+	TEXT-DECORATION: none;
+}
+#cat A:hover {
+	COLOR: #ffffff;
+	TEXT-DECORATION: underline;
+}
+#ltlink A:link, #ltlink A:visited, #ltlink A:active {
+	COLOR: #5E82A6;
+	TEXT-DECORATION: none;
+}
+#ltlink A:hover {
+	COLOR: #006600;
+	TEXT-DECORATION: underline;
+}
+.thtcolor {
+	COLOR: #ffffff;
+}
+
+
+.ForumTable
+{
+	border : 1px solid #C1C1C1;
+}
+.ForumTHeader
+{
+	background-color: #005330;
+	font-family :Tahoma;
+	font-size: 11px;
+	color:#ffffff;
+	font-weight: bold;
+	height: 30px;
+}
+.ForumWTitle
+{
+	font-family: Tahoma;
+	color:#5E82A6;
+	font-weight:bold;
+	font-size: 11px;
+}
+.FText10
+{
+	font-family: Tahoma;
+	font-size:10px;
+}
+.FText11
+{
+	font-family: Tahoma;
+	font-size:11px;
+}
+.FText12
+{
+	font-family: Tahoma;
+	font-size:12px;
+}
+.FText13
+{
+	font-family: Tahoma;
+	font-size:13px;
+}
+
+

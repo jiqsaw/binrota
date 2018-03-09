@@ -1,0 +1,207 @@
+body {
+	margin: 0px 0px 0px 0px;
+	background: #f1f1f1;
+   	font-family: Tahoma;
+   	font-size: 11px;
+
+}
+
+table {
+	border-spacing: 0px 0px;
+	border-collapse: collapse;
+}
+
+.dtable {
+	 padding: 0;
+	 border-collapse: collapse;
+	 border-color: #FFFFFF;
+	 background-color: #FFFFFF;
+}
+
+.itable {
+	border-collapse: collapse;
+	width: 100%;
+	border-color: #000000;
+	background-color: #FFFFFF;
+}
+
+.forms {
+	font-family: Verdana;
+	font-size: 8pt;
+	color: #2B0000;
+	border: 1px solid #AAAEBB;
+	padding-left: 4px;
+	background-color: #FFFFF6;
+	width: 90%;
+	height: 19px;
+}
+
+textarea {
+	font-family: Verdana;
+	font-size: 8pt;
+	color: #2B0000;
+	border: 1px solid #AAAEBB;
+	padding-left: 4px;
+	background-color: #FFFFF6;
+	width: 230px;
+}
+
+.btn {
+	font-family: Verdana; 
+	font-size: 8pt; 
+	font-weight: bold; 
+	color: #3F414E; 
+	border: 1px solid #A3A8B6; 
+	padding-top: 1px; 
+	padding-bottom: 1px; 
+	background-color: #F5F4F7;
+	cursor: pointer;
+}
+
+.CellLeft {
+	text-align: left;
+	padding-left: 8px;
+	background-color: #E5E5E5;
+	font-weight: bold;
+	font-family: Verdana;
+	font-size: 8pt;
+	color: #460000;
+}
+
+.CellRight {
+	padding-left: 6px; 
+	padding-top: 3px; 
+	padding-bottom: 3px;
+	background-color: #D2D2D2;
+}
+
+.CellTitle {
+	background-color: #494D5C;
+	height: 30;
+	padding-left: 7px;
+	font-family: Tahoma;
+	font-size: 10pt;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+.CellBottom {
+	background-color: #C4C6D0;
+	text-align: center;
+	height: 35;
+}
+
+.CellExtra {
+	padding-right: 4px;
+	padding-left: 10px;
+	background-color: #F2F2F2;
+	font-family: Verdana;
+	font-size: 8pt;
+	color: #800000;
+	height: 28px;
+}
+
+#txtare {
+	font-family: Verdana;
+	font-size: 8pt;
+	color: #2B0000;
+	border: 1px solid #AAAEBB;
+	padding-left: 4px;
+	background-color: #FFFFF6;
+	width: 290px;
+}
+
+.WhiteText  {
+	font-family: Microsoft Sans Serif;
+	font-size: 9pt;
+	color: #FFFFFF;
+}
+
+.UnderlineLink  {
+	text-decoration: none;
+}
+
+:hover.UnderlineLink  {
+	text-decoration: underline;
+}
+
+.ListTitle {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	color: #FFFFFF;	
+	font-weight: bold;
+	padding-left: 10px;
+	height: 30px;
+	text-align: left;
+	background-color: #525667;
+}
+
+.ListTitleCh {
+	padding-left: 5px; 
+	background-color: #525667;
+}
+
+.Btn1 {
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #FFFFFF; 
+	font-weight: bold; 
+	height: 23; 
+	width: 62; 
+	border: 1px solid #FF661C; 
+	padding-left: 4px; 
+	padding-right: 4px; 
+	padding-top: 1px; 
+	padding-bottom: 1px; 
+	background-color: #D67A14;
+}
+
+.Btn2 {
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #FFFFFF; 
+	font-weight: bold; 
+	height: 23; 
+	width: 62; 
+	border: 1px solid #8A8A8A; 
+	padding-left: 4px; 
+	padding-right: 4px; 
+	padding-top: 1px; 
+	padding-bottom: 1px;
+	background-color: #626262;
+	cursor: pointer;
+}
+
+.Error {
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: red; 	
+}
+
+.Result {
+	background-color: Red;
+	padding-left: 15px;
+	height: 35px;
+	font-family: Trebuchet MS;
+	font-size: 16px;
+	color: #FFFFFF;
+}
+
+.SfTable {
+	padding-top: 2px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 2px;
+	width: 100%;
+	height: 30px;
+	background-color: #EAE9E9;
+	border: 1px solid #FFFFFF;
+}
+
+.rptItem {
+	cursor: pointer; 
+	height: 22px; 
+	text-align: left;
+	padding-left: 5px;	
+	background-color: #F0F0F0;
+}

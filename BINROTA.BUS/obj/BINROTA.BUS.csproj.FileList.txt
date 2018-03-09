@@ -1,0 +1,13 @@
+bin\Debug\BINROTA.BUS.dll
+bin\Debug\BINROTA.BUS.pdb
+bin\Debug\BINROTA.COM.dll
+bin\Debug\BINROTA.DAL.dll
+bin\Debug\CARETTA.COM.dll
+bin\Debug\CARETTA.DBI.dll
+bin\Debug\CARETTA.COM.pdb
+bin\Debug\BINROTA.COM.pdb
+bin\Debug\CARETTA.DBI.pdb
+bin\Debug\BINROTA.DAL.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\BINROTA.BUS.dll
+obj\Debug\BINROTA.BUS.pdb

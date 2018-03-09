@@ -1,0 +1,60 @@
+<template version="2.0">
+  <header>
+    <app>
+    </app>
+    <name>NewTemplate</name>
+    <description>
+    </description>
+    <author>ApexSQL</author>
+    <legal>Copyright (C) 1999-2007 ApexSQL LLC. All rights reserved.</legal>
+    <ExpectedObjectTypes>Table, View</ExpectedObjectTypes>
+  </header>
+  <languages>
+    <output>C#</output>
+    <scripting>CSharp</scripting>
+  </languages>
+  <outputfile>
+    <name>
+    </name>
+    <path>
+    </path>
+    <Mode>MultiFile</Mode>
+    <Encoding>1254</Encoding>
+  </outputfile>
+  <Import>
+    <includes />
+    <Namespaces />
+    <Assemblies />
+    <Templates />
+  </Import>
+  <templatecode><![CDATA[<%
+//------------------------------------------------------------ 
+// TEMPLATE : Inherited C# Class
+// PURPOSE  : Generates Empty C# classes for tables that inherited from their base classes
+// EXPECTS  : Tables
+// OUTPUT   : C#
+// AUTHOR   : CARETTA - İlker Nacaklı - UA Edited
+// MODIFIED : July 2007
+// NOTES
+//------------------------------------------------------------
+
+Table objTable = Code.Database.ActiveTable;
+string ProjectNamespace = "BINROTA.DAL";
+	
+%>
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using CARETTA.DBI;
+
+namespace <%=ProjectNamespace%> {
+
+	public class <%=objTable.Name%> : <%=ProjectNamespace%>.Entities.b<%=objTable.Name%>
+	{
+	
+	}
+}]]></templatecode>
+</template>

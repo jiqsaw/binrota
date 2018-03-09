@@ -1,0 +1,42 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="BinRota.master.cs" Inherits="BinRota" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>BINROTA</title>
+    <link href="Styles/StyleSheet.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+     <table>
+                <tr>
+                    <td style="width: 100px; height: 21px;">
+                        <asp:HyperLink ID="hlMainPage" runat="server" NavigateUrl="~/MainPage.aspx" >Ana Sayfa</asp:HyperLink></td>
+                    <td style="width: 100px; height: 21px;">
+                    </td>
+                    <td style="width: 100px; height: 21px;">
+                        <asp:HyperLink ID="hlRegister" runat="server" NavigateUrl="~/Register.aspx">Register</asp:HyperLink></td>
+                    <td style="width: 100px; height: 21px;"><asp:HyperLink ID="hlUserLogin" runat="server" NavigateUrl="~/UserLogin.aspx">User Login</asp:HyperLink>
+                        </td>
+                    <td style="width: 100px; height: 21px;">
+                        <asp:HyperLink ID="hlMemberLogin" runat="server" NavigateUrl="~/MemberLogin.aspx">Member Login</asp:HyperLink>
+                        </td>
+                        <td style="width: 100px; height: 21px;">
+                        <asp:LinkButton ID="lbLogout" runat="server" OnClick="lbLogout_Click" CausesValidation="False" >Logout</asp:LinkButton></td>
+                    <td style="width: 100px; height: 21px">
+                        <asp:HyperLink ID="hlMyOwnPage" runat="server" NavigateUrl="~/MemberPageUpdate2.aspx" Width="126px">Kendi Ana Sayfam</asp:HyperLink></td>
+                        <td style="width: 47px; height: 21px">
+                        <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Forum.aspx" Width="51px">Forum</asp:HyperLink></td>
+                </tr>
+                </table> 
+        <br />
+        <asp:Label ID="lblPageDesc" runat="server"></asp:Label><br />
+        <br />
+        <asp:contentplaceholder id="ContentPlaceHolder1" runat="server">
+        </asp:contentplaceholder>
+    </div>
+    </form>
+</body>
+</html>

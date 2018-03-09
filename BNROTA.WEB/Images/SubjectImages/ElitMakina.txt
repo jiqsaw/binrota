@@ -1,0 +1,65 @@
+MPC 3034 Kart Bilgileri :
+############################################################################
+
+YPV SÜRÜCÜ             			 ADP 3024 Arabirim 
+
+37 PIN                          		26 PIN
+
+5 --------------------------------------	6 	EXTG		Siyah         
+6 --------------------------------------	26 	SVON   	Kahverengi
+26 -------------------------------------	14 	CW+		Kýrmýzý
+27 -------------------------------------	5 	CW-		Pembe
+28 -------------------------------------	23	CCW+		Sarý
+29 -------------------------------------	15 	CCW-		Yeþil
+19 -------------------------------------	21 	EA+		Mavi
+20 -------------------------------------	20 	EA-		Mor
+21 -------------------------------------	12 	EB+		Gri
+22 -------------------------------------	11 	EB-		Beyaz
+
+Baðlantýlarda 26 pinlik soketler yerine klemensler kullanýldý. 
+Enkoder giriþleri baðlanmadý. O kablolar güzelce bantlandý. Yukarýda renkleri mevcut.
+
+Yapýlan Ýþlem :	Motorlara hareket verildi. Eksenler belirlendi.
+
+
+Karttaki X ekseni makinanýn X ekseni
+Karttaki Y ekseni makinanýn Y ekseni
+Karttaki A ekseni makinanýn rotary ekseni
+
+Makinanýn X ekseninin Limit switchleri kartýn X ekseni LS+ ve LS- uçlarýna baðlanýr.
+Makinanýn Y ekseninin Limit switchleri kartýn Y ekseni LS+ ve LS- uçlarýna baðlanýr.
+Makinanýn Rotary ekseninin Limit switchleri kartýn A ekseni LS+ ve LS- uçlarýna baðlanýr.
+
+############################################################################
+
+AIO 3320 Kart Bilgileri
+############################################################################
+Digital Input Output Arabirimi
+
+Yapýlan iþlem : I/O lar test edildi.
+
+	Bu giriþler panoya kadar çekilecek. Aþaðýda olasý giriþ çýkýþlarý yazdým.
+	- Acil Stop
+	- Homing Switchleri (Buraya mý ? Yoksa 3034 kartý üstüne mi ?)
+	- 2 pinomatik valf var. (Hem manuel ,hem otomatik çalýþcak.)
+	- 3 AC motor var . Biri manuel çalýþcak.
+	- Su püskürtme için bir çýkýþ gerekebilir.
+
+------------------------------------------------
+------------------------------------------------
+
+Analog Input Output Arabirimi
+
+Yapýlan iþlem : Sensör baðlandý ve I/O lar test edildi. Analog çýkýþ veren sensörün sensör 
+tarafýndaki baðlantýlarý kontrol edilmeli analog ground yanlýþ yerden baðlanmýþ olabilir.
+
+	- Analog çýkýþ veren sensörümüz var. Kartýn 0. analog inputuna baðlancak.
+	- Inverter Ac motor sürücüsünün devri tekerlek boyutuna göre ayarlanmalý. Bu da analog çýkýþlar kullanýlarak 
+	yapýlabilir.Bunun giriþini baðlatmadým. Bu ayarýn nasýl yapýlacaðý aþaðýdaki bilgilerden edinilebilinir.
+	
+		Inverter Markasý :	Telemecanique Altivar 31 
+							www.schneider-electric.com.tr
+							Müþteri hattý tel :4443030 
+
+
+############################################################################

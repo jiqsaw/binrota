@@ -1,0 +1,180 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E957C4EA-FF6E-4F25-A896-50C663F02666}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BINROTA.MSC</RootNamespace>
+    <AssemblyName>BINROTA.MSC</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ApexTemplate\Custom\CSharp\UA_Base_CSharp_Class.ptpx" />
+    <None Include="ApexTemplate\Custom\CSharp\UA_Inherited_CSharp_Class.ptpx" />
+    <None Include="ApexTemplate\Custom\Sql\UA_SQL.ptpx" />
+    <None Include="Design\Others\Binrota.psd" />
+    <None Include="Design\Psd\1.psd" />
+    <None Include="Design\Psd\1_2.psd" />
+    <None Include="Design\Psd\ButtonImage.psd" />
+    <None Include="Design\Psd\EtkinlikTakvimi.psd" />
+    <None Include="Design\Psd\FotoGaleri.psd" />
+    <None Include="Design\Psd\GeziYazısıEkle.psd" />
+    <None Include="Design\Psd\Haberler.psd" />
+    <None Include="Design\Psd\Hakkimzida.psd" />
+    <None Include="Design\Psd\Iletisim.psd" />
+    <None Include="Design\Psd\LoginPopup.psd" />
+    <None Include="Design\Psd\MailTemplate.psd" />
+    <None Include="Design\Psd\Map.psd" />
+    <None Include="Design\Psd\PopupSonuc.psd" />
+    <None Include="Design\Psd\Profil.psd" />
+    <None Include="Design\Psd\SifremiUnuttum.psd" />
+    <None Include="Design\Psd\SSS.psd" />
+    <None Include="Design\Psd\SubBlank.psd" />
+    <None Include="Design\Psd\SubBlank2.psd" />
+    <None Include="Design\Psd\SubTemplate.psd" />
+    <None Include="Design\Psd\UlkeSayfasi.psd" />
+    <None Include="Design\Psd\UyelikFormu.psd" />
+    <None Include="Design\Psd\YasalUyari.psd" />
+    <None Include="Design\Psd\YaziYorum.psd" />
+    <None Include="Design\Psd\YorumEkle.psd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Design\Html\Images\BackGrounds\AnketSepBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\Author2Bg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\AuthorBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\ButtonBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\CitiesBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\CitiesLeftImage.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\CitiesRightImage.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\CountryDetailBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\DegradeBlueBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\DegradeSPageBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\MainBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\MainNewsBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\MapSearchBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\MemberInfoBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\NewsBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\PageBottomBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\SearchAuthorBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\SearchBoxBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\StripedBottomBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\TextBox.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\TopBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\TripCategoriesBg.jpg" />
+    <Content Include="Design\Html\Images\BackGrounds\TripSepBg.jpg" />
+    <Content Include="Design\Html\Images\Content\Author1.jpg" />
+    <Content Include="Design\Html\Images\Content\Author2.jpg" />
+    <Content Include="Design\Html\Images\Content\City1.jpg" />
+    <Content Include="Design\Html\Images\Content\City2.jpg" />
+    <Content Include="Design\Html\Images\Content\City3.jpg" />
+    <Content Include="Design\Html\Images\Content\City4.jpg" />
+    <Content Include="Design\Html\Images\Content\City5.jpg" />
+    <Content Include="Design\Html\Images\Content\Country1.jpg" />
+    <Content Include="Design\Html\Images\Content\Friend1.jpg" />
+    <Content Include="Design\Html\Images\Content\GM1.jpg" />
+    <Content Include="Design\Html\Images\Content\Hotel1.gif" />
+    <Content Include="Design\Html\Images\Content\Hotel2.jpg" />
+    <Content Include="Design\Html\Images\Content\Hotel3.jpg" />
+    <Content Include="Design\Html\Images\Content\SNews1.jpg" />
+    <Content Include="Design\Html\Images\Content\WorldMap.jpg" />
+    <Content Include="Design\Html\Images\Design\BinrotaLogo.jpg" />
+    <Content Include="Design\Html\Images\Design\btnAddPage.jpg" />
+    <Content Include="Design\Html\Images\Design\btnEdit.gif" />
+    <Content Include="Design\Html\Images\Design\btnGotoDetail.gif" />
+    <Content Include="Design\Html\Images\Design\btnSearch.jpg" />
+    <Content Include="Design\Html\Images\Design\btnSend.jpg" />
+    <Content Include="Design\Html\Images\Design\CarettaLogo.gif" />
+    <Content Include="Design\Html\Images\Design\CarettaLogo.jpg" />
+    <Content Include="Design\Html\Images\Design\FreeTextBox.jpg" />
+    <Content Include="Design\Html\Images\Design\login.jpg" />
+    <Content Include="Design\Html\Images\Design\MemberContent1.jpg" />
+    <Content Include="Design\Html\Images\Design\NewsArrow.jpg" />
+    <Content Include="Design\Html\Images\Design\SearchButton.gif" />
+    <Content Include="Design\Html\Images\Design\SWorldMap.jpg" />
+    <Content Include="Design\Html\Images\Other\btnSend.jpg" />
+    <Content Include="Design\Html\Images\Other\CarettaLogo.gif" />
+    <Content Include="Design\Html\Images\Other\CarettaLogo.jpg" />
+    <Content Include="Design\Html\Images\Other\login.jpg" />
+    <Content Include="Design\Html\Images\Other\NewsArrow.jpg" />
+    <Content Include="Design\Html\Images\Other\SearchButton.gif" />
+    <Content Include="Design\Others\AjaxUtil.js" />
+    <Content Include="Design\Others\Binrotad.png" />
+    <Content Include="Design\Others\Form.css" />
+    <Content Include="Design\Others\Format.css" />
+    <Content Include="Design\Others\ModalPopup.css" />
+    <Content Include="Design\Others\ModalPopup.js" />
+    <Content Include="Design\Others\Processing.css" />
+    <Content Include="Design\Others\Tag.css" />
+    <Content Include="Design\Others\Text.css" />
+    <Content Include="Design\Others\Util.js" />
+    <Content Include="Design\Psd\AnaSayfa_2.jpg" />
+    <Content Include="Design\Psd\Binrota.jpg" />
+    <Content Include="Design\Psd\Ekranlar Listesi.txt" />
+    <Content Include="Design\Psd\EtkinlikTakvimi.jpg" />
+    <Content Include="Design\Psd\GeziYazısıEkle.jpg" />
+    <Content Include="Design\Psd\Haberler.jpg" />
+    <Content Include="Design\Psd\Hakkimizda.jpg" />
+    <Content Include="Design\Psd\Iletisim.jpg" />
+    <Content Include="Design\Psd\index.html" />
+    <Content Include="Design\Psd\LoginPopup.jpg" />
+    <Content Include="Design\Psd\PopupSonuc.jpg" />
+    <Content Include="Design\Psd\Profil.html" />
+    <Content Include="Design\Psd\Profil.jpg" />
+    <Content Include="Design\Psd\SifremiUnuttum.jpg" />
+    <Content Include="Design\Psd\SSS.jpg" />
+    <Content Include="Design\Psd\UlkeSayfasi.jpg" />
+    <Content Include="Design\Psd\UyelikFormu.jpg" />
+    <Content Include="Design\Psd\YasalUyari.jpg" />
+    <Content Include="Design\Psd\Yazarlarimiz.jpg" />
+    <Content Include="Design\Psd\YaziYorum.jpg" />
+    <Content Include="Design\Psd\YorumEkle.jpg" />
+    <Content Include="DLL\AjaxControlToolkit.dll" />
+    <Content Include="DLL\FreeTextBox.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ApexTemplate\Default\" />
+    <Folder Include="Backup\Code\" />
+    <Folder Include="Backup\Html\" />
+    <Folder Include="Backup\Sql\" />
+    <Folder Include="Documents\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

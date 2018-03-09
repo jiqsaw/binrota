@@ -1,0 +1,121 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E2CFF14F-C853-4351-85DC-9E12EA65020A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BINROTA.DAL</RootNamespace>
+    <AssemblyName>BINROTA.DAL</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activity.cs" />
+    <Compile Include="Categories.cs" />
+    <Compile Include="Entities\bMemberPhotos.cs" />
+    <Compile Include="Entities\bPagePoints.cs" />
+    <Compile Include="Entities\Forum\bForumArticleItems.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Faq.cs" />
+    <Compile Include="Entities\bActivity.cs" />
+    <Compile Include="Entities\bCategories.cs" />
+    <Compile Include="Entities\bFaq.cs" />
+    <Compile Include="Entities\Forum\bForumArticle.cs" />
+    <Compile Include="Entities\Forum\bForumCategory.cs" />
+    <Compile Include="Entities\bJobs.cs" />
+    <Compile Include="Entities\bMarketingGroups.cs" />
+    <Compile Include="Entities\bMarketingGroupsItems.cs" />
+    <Compile Include="Entities\bMembers.cs" />
+    <Compile Include="Entities\bMemberTypes.cs" />
+    <Compile Include="Entities\bPageCategories.cs" />
+    <Compile Include="Entities\bPageComments.cs" />
+    <Compile Include="Entities\bPagePhotos.cs" />
+    <Compile Include="Entities\bPages.cs" />
+    <Compile Include="Entities\bPageTypes.cs" />
+    <Compile Include="Entities\bPermissions.cs" />
+    <Compile Include="Entities\bRolePermissions.cs" />
+    <Compile Include="Entities\bRoles.cs" />
+    <Compile Include="Entities\bStatus.cs" />
+    <Compile Include="Entities\bSubjectCustomization.cs" />
+    <Compile Include="Entities\bSubjects.cs" />
+    <Compile Include="Entities\bSubjectTypes.cs" />
+    <Compile Include="Entities\bSurveyAnswer.cs" />
+    <Compile Include="Entities\bSurveyChoice.cs" />
+    <Compile Include="Entities\bSurveyQuestion.cs" />
+    <Compile Include="Entities\bUserRoles.cs" />
+    <Compile Include="Entities\bUsers.cs" />
+    <Compile Include="ForumArticle.cs" />
+    <Compile Include="ForumArticleItems.cs" />
+    <Compile Include="ForumCategory.cs" />
+    <Compile Include="Jobs.cs" />
+    <Compile Include="MarketingGroups.cs" />
+    <Compile Include="MarketingGroupsItems.cs" />
+    <Compile Include="MemberPhotos.cs" />
+    <Compile Include="Members.cs" />
+    <Compile Include="MemberTypes.cs" />
+    <Compile Include="PageCategories.cs" />
+    <Compile Include="PageComments.cs" />
+    <Compile Include="PagePhotos.cs" />
+    <Compile Include="PagePoints.cs" />
+    <Compile Include="Pages.cs" />
+    <Compile Include="PageTypes.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RolePermissions.cs" />
+    <Compile Include="Roles.cs" />
+    <Compile Include="Status.cs" />
+    <Compile Include="SubjectCustomization.cs" />
+    <Compile Include="Subjects.cs" />
+    <Compile Include="SubjectTypes.cs" />
+    <Compile Include="SurveyAnswer.cs" />
+    <Compile Include="SurveyChoice.cs" />
+    <Compile Include="SurveyQuestion.cs" />
+    <Compile Include="UserRoles.cs" />
+    <Compile Include="Users.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CARETTA.DBI\CARETTA.DBI.csproj">
+      <Project>{3CE6C40A-EEED-4D7D-9274-3757C059B80E}</Project>
+      <Name>CARETTA.DBI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

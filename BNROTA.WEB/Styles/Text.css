@@ -1,0 +1,175 @@
+.T {
+	font-family: Tahoma;
+	font-size: 11px;
+}
+
+.Treb {
+	font-family: Trebuchet MS; 
+	font-size: 12px; 
+}
+
+.Verd {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; 
+	font-size: 11px; 
+	background-position: 
+}
+
+.Verd10px {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; 
+	font-size: 10px; 
+}
+
+.Verd12px {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; 
+	font-size: 12px; 
+}
+
+.Arial {
+	font-family: Arial; 
+	font-size: 11px; 
+}
+
+.clGray {
+	color: #A9A2A2;
+}
+
+.clDarkGray {
+	color: #656B71;
+}
+
+.clGrayAuthorName {
+	color: #948B8B;
+}
+
+.clDarkBlack{
+	color: #5E82A6;
+}
+
+.clDarkRed{
+	color: #A74B4D;
+}
+
+.clBlack {
+	color: #333D3F;
+}
+
+.clBlackBold {
+	color: #333D3F;
+	font-weight:bold;
+}
+
+.clBlue {
+	color: #237698;
+}
+
+.clOtherBlue {
+	color: #0E41C3;
+}
+
+.clGreen {
+	color: #3185A1;
+}
+
+.clDarkGreen{
+	color: #5E82A6;
+}
+
+.clAqua {
+	color: #a7bfe0;	
+}
+
+.clRed {
+	color: #330404;	
+}
+
+.clNavy {
+	color: #086178;	
+}
+
+.clWhite {
+	color: #FFFFFF;	
+}
+
+
+/* CUSTOM */ 
+
+.NewsTitle {
+	font-family: Trebuchet MS; 
+	font-size: 14px;
+	color:#416374;
+	text-align: left;
+}
+
+.RegionHeader{
+	font-family: Trebuchet MS; 
+	font-size: 12px; 
+	font-weight: bold;
+	color:#5E82A6;
+}
+
+.SNewsTitle {
+	font-family: Trebuchet MS; 
+	font-size: 13px;
+	color:#416374;
+	font-weight: bold;
+}
+
+.NewsSpot {
+	font-family: Trebuchet MS; 
+	font-size: 12px;
+	color:#2B8EAE;
+}
+
+.BottomMenu {
+	color : #455454;
+	font-family: Arial; 
+	font-size: 11px; 
+}
+
+.Copyright {
+	color : #8E9090;
+	font-family: Arial; 
+	font-size: 11px; 
+}
+
+.TopGrayText {
+	color:#8584A0;
+	font-family: Tahoma;
+	font-size: 11px;
+}
+
+.BlueHeader {
+	font-family: Trebuchet MS; 
+	font-size: 12px;
+	color: #5E82A6;
+	font-weight: bold;
+}
+
+.LogoColorHeader {
+	font-family: Trebuchet MS; 
+	font-size: 12px;
+	color: #d49e36;
+	font-weight: bold;
+}
+
+.CountryHeader
+{
+	font-family: Trebuchet MS; 
+	font-size: 21px;
+	color: #FFFFFF;
+}
+
+.Message
+{
+	color:Red;
+	font-size: 15px;
+}
+
+.CalendarTitle
+{
+	font-family: Trebuchet MS; 
+	font-size: 20px;
+	color: #FFFFFF;
+}
+
+/* // CUSTOM // */ 

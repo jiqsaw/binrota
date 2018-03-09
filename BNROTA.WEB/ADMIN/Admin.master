@@ -1,0 +1,111 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Admin.master.cs" Inherits="ADMIN_Admin" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+
+    <title>BÝNROTA YÖNETÝM</title>
+    
+    <link href="Styles/General.css" rel="stylesheet" type="text/css" />
+    <link href="Styles/Left.css" rel="stylesheet" type="text/css" />
+    <link href="Styles/Bar.css" rel="stylesheet" type="text/css" />
+    
+    <script language="javascript" src="Scripts/Custom.js"></script>
+    
+</head>
+
+<body>
+<form id="form1" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server">
+    </asp:ScriptManager> 
+    <table width="100%">
+        <tr>
+            <td height="108" style="padding-left: 20px;">
+                <asp:Image runat="server" ID="imgLogo" ImageUrl="~/ADMIN/Images/Logo2.jpg" />
+            </td>
+        </tr>
+        <tr><td height="2" bgcolor="#FFFFFF"></td></tr>
+        <tr>
+            <td height="36" bgcolor="#8b9dbc" style="padding-left: 30px;">
+                
+	            <table class="BarbgTable" cellspacing="0" cellpadding="0">
+	            <tr>
+	            <td class="BarMenuCell BarText" style="height: 19px">
+		            <a class="bar" href="AdminDefault.aspx">Ana Sayfa</a>
+		            <font class="seperator">|</font>	            
+	            
+		            <a class="bar" href="#" onclick="location.reload();">Sayfayý Yenile</a>
+		            <font class="seperator">|</font>
+
+		            <asp:HyperLink CssClass="bar" runat="server" ID="hlBinrota" Text="Binrota.com" NavigateUrl="http://www.binrota.com" Target="_blank" />
+	            </td>
+            		
+	            </tr>
+	            </table>                
+                
+            </td>
+        </tr>
+        <tr><td height="2" bgcolor="#FFFFFF"></td></tr>
+        <tr>
+            <td>
+            
+                <table width="100%" height="470">
+                    <tr>
+                        <td bgcolor="#c3b6b6" width="200" style="padding: 6px;" valign="top">
+                        
+                            <table class="bgTable" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td class="ModulCell" style="height: 24px">
+                                        MODÜLLER&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="MenuCell">
+                                    
+                                        <a class="Menu" onmouseover="this.className='MenuOver'" onmouseout="this.className='Menu'" href="Subjects.aspx">
+                                            Kýta, Ülke, Þehir Yönetimi </a>
+                                        <a class="Menu" onmouseover="this.className='MenuOver'" onmouseout="this.className='Menu'" href="Places.aspx">
+                                            Haber Yönetimi </a>
+                                        <a class="Menu" onmouseover="this.className='MenuOver'" onmouseout="this.className='Menu'" href="Places.aspx">
+                                            Etkinlik Takvimi </a>
+                                        <a class="Menu" onmouseover="this.className='MenuOver'" onmouseout="this.className='Menu'" href="Places.aspx">
+                                            Gözde Mekanlar </a>
+                                        <a class="Menu" onmouseover="this.className='MenuOver'" onmouseout="this.className='Menu'" href="Places.aspx">
+                                            Yazarlar </a>
+                                        <a class="Menu" onmouseover="this.className='MenuOver'" onmouseout="this.className='Menu'" href="Places.aspx">
+                                            SSS </a>
+                                        <a class="Menu" onmouseover="this.className='MenuOver'" onmouseout="this.className='Menu'" href="Places.aspx">
+                                            Gezi Yazýlarý </a>
+                                        <a class="Menu" onmouseover="this.className='MenuOver'" onmouseout="this.className='Menu'" href="Survey.aspx">
+                                            Anket </a>
+                                        <a class="Menu" onmouseover="this.className='MenuOver'" onmouseout="this.className='Menu'" href="Places.aspx">
+                                            Yorumlar </a>
+                                        <a class="Menu" onmouseover="this.className='MenuOver'" onmouseout="this.className='Menu'" href="Places.aspx">
+                                            Foto Galeri </a>                                                                                          
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <br /><br />
+                            
+                            <asp:LinkButton CssClass="bar" runat="server" ID="lnkLogout" Text="Güvenli Çýkýþ" OnClick="lnkLogout_Click"></asp:LinkButton>
+                            
+                            </td>
+                        <td bgcolor="#FFFFFF" style="width: 4px">&nbsp;</td>
+                        <td bgcolor="#FFFFFF" align="center" valign="top">
+                            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                            </asp:ContentPlaceHolder>
+                        </td>
+                    </tr>
+                </table>
+            
+            </td>
+        </tr>
+        <tr>
+            <td height="9" bgcolor="#d4cece"></td>
+        </tr>
+    </table>
+    
+    </form>
+</body>
+</html>

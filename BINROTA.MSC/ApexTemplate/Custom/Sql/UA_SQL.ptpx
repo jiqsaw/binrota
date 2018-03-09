@@ -1,0 +1,853 @@
+<template version="2.0">
+  <header>
+    <app>
+    </app>
+    <name>NewTemplate</name>
+    <description>
+    </description>
+    <author>ApexSQL</author>
+    <legal>Copyright (C) 1999-2007 ApexSQL LLC. All rights reserved.</legal>
+    <ExpectedObjectTypes>Any</ExpectedObjectTypes>
+  </header>
+  <languages>
+    <output>Documentation</output>
+    <scripting>CSharp</scripting>
+  </languages>
+  <outputfile>
+    <name>
+    </name>
+    <path>
+    </path>
+    <Mode>MultiFile</Mode>
+    <Encoding>1254</Encoding>
+  </outputfile>
+  <Import>
+    <includes />
+    <Namespaces />
+    <Assemblies />
+    <Templates />
+  </Import>
+  <templatecode><![CDATA[<%
+//------------------------------------------------------------ 
+//	TEMPLATE : SQL_Basic_Sproc_Table
+//	PURPOSE  : Generates 6 all general purpose sprocs for table
+//	EXPECTS  : TABLES
+//	OUTPUT   : .SQL
+//	AUTHOR   : CARETTA - İlker Nacaklı - Edited by UA
+//	SCRIPT	 : C#
+//	LANGUAGE : SQL
+//	MODIFIED : July 2007
+//	NOTES    :
+//------------------------------------------------------------
+
+
+string Author = "Caretta";
+string sprocPrefix = "sproc"; 
+	
+string loadSuffix = "Select";
+string loadallSuffix = "SelectAll";
+string insertSuffix = "Insert";
+string updateSuffix = "Update";
+string deleteSuffix = "Delete";
+string deletebyparamsSuffix = "DeleteByParams";
+string loadbyparamsSuffix = "SelectByParams";
+	
+if(!Code.Operations.DoDelete && 
+	!Code.Operations.DoInsert &&
+	!Code.Operations.DoSelect &&
+	!Code.Operations.DoUpdate)
+{
+	Out.WriteLine("-- No operations have been selected i.e. Delete, Insert, Select, Update");
+}
+%>
+
+USE [<%= Code.Database.Name %>]
+
+<%
+	Table table = Code.Database.ActiveTable;
+%>
+
+/* ------------------------------------------------------------
+   FILE:         <%= Code.OutputFile.FilePathAndName %>
+   
+   Description:  Common stored procedures For table '<%= table.Name%>'
+   
+   AUTHOR:       <%= Author + " " + DateTime.Now %>
+   ------------------------------------------------------------ */
+
+<%
+
+/*
+******************************************************************************
+******************************************************************************
+INSERT - BEGIN
+******************************************************************************
+******************************************************************************
+*/
+
+if(Code.Operations.DoInsert)
+{
+	string strProcName = string.Format("{0}{1}{2}", sprocPrefix, table.Name,insertSuffix);
+%>
+
+If EXISTS (Select * FROM SYSOBJECTS WHERE ID = OBJECT_ID('<%= strProcName %>') AND sysstat & 0xf = 4)
+     DROP PROCEDURE <%= strProcName %>;
+GO
+
+/* ------------------------------------------------------------
+   PROCEDURE:    <%= strProcName %>
+   
+   Description:  Inserts a record into table '<%= table.Name %>'
+   
+   AUTHOR:       <%= Author + " " + DateTime.Now %>
+   ------------------------------------------------------------ */
+
+CREATE PROCEDURE <%= strProcName%>
+<%
+	int counter = 0;
+	
+	foreach(Column f in table.Columns)
+	{
+		if(counter == 0)
+		{
+			Out.WriteLine("(");
+			Out.Indent();
+		}
+		else
+			Out.WriteLine(",");
+		
+		counter++;
+		
+		if(f.IsInPrimaryKey || f.IsIdentity || f.IsTimeStamp)
+		{
+			Out.Write("@{0} {1} = null output", f.Name, f.SQLDatatypeAndLength);
+		}
+		else
+		{
+			Out.Write("@{0} {1}", f.Name, f.SQLDatatypeAndLength);
+			
+			if( f.IsNullable )
+			{
+				Out.Write(" = null");
+			}			
+		}			
+	}
+	
+	if(counter > 0)
+	{
+		Out.Unindent();
+		Out.WriteLine();
+		Out.WriteLine(")");	
+	}
+%>
+As
+BEGIN
+	DECLARE @Err Int
+
+<%
+	// generate code to initialize (if necessary) for all keys of uniqueidentifier type
+	foreach(Column k in table.PrimaryKeyColumns)
+	{
+		if( k.IsGUID )
+		{
+			Out.WriteLine( "IF @" + k.Name + " IS NULL");
+			Out.WriteLine( "	 SET @" + k.Name + " = NEWID()");
+			Out.WriteLine();
+			Out.WriteLine( "Set @Err = @@Error");
+			Out.WriteLine();
+			Out.WriteLine( "IF @Err <> 0" );
+			Out.WriteLine( "    RETURN @Err");
+			Out.WriteLine();
+		}
+	}
+%>
+	INSERT
+	INTO [<%= table.Name %>]
+	(
+<%	counter = 0;
+
+	Out.IndentLevel += 2;
+	// list all fields except identity (if one exists)
+	foreach(Column f in table.Columns)
+	{
+		// check if field is not an indentity in which case we won't include it into insert list
+		if( !f.IsIdentity && !f.IsTimeStamp)
+		{
+			if( counter > 0 )
+			{
+				Out.WriteLine(",");
+			}
+			
+			counter++;
+			
+			Out.Write("[{0}]", f.Name);
+		}
+	}
+	Out.IndentLevel -= 2;
+%>
+
+	)
+	VALUES
+	(
+<%	counter = 0;
+	
+	Out.IndentLevel += 2;
+	// list all parameters except the one for indetity (if one exists)
+	foreach(Column f in table.Columns)
+	{
+		// check if fields is not an identity
+		if(!f.IsIdentity && !f.IsTimeStamp)
+		{
+			if(counter > 0)
+			{
+				Out.WriteLine(",");
+			}
+			
+			counter++;
+			Out.Write("@{0}", f.Name);
+		}
+	}
+	Out.IndentLevel -= 2;
+%>
+
+	)
+
+	Set @Err = @@Error
+<%
+	bool isKey = false;
+	// get output value for identity (if there is one)
+	foreach(Column f in table.Columns)
+	{
+		if(f.IsIdentity){
+			Out.WriteLine("\tSet @{0} = SCOPE_IDENTITY()", f.Name);
+			isKey = true;
+			Out.WriteLine("\tRETURN @{0}",f.Name);
+		}else if(f.IsTimeStamp){
+			Out.WriteLine("\tSet @{0} = @@DBTS", f.Name);
+		}
+	}	
+	if(!isKey)
+		Out.WriteLine("\tRETURN @Err");
+%>
+
+End
+GO
+
+-- Display the status of Proc creation
+If @@Error = 0 PRINT 'Procedure Creation: <%= strProcName %> Succeeded'
+Else PRINT 'Procedure Creation: <%= strProcName %> Error on Creation'
+GO
+
+<%
+}
+
+/*
+******************************************************************************
+******************************************************************************
+INSERT - END
+******************************************************************************
+******************************************************************************
+*/
+
+
+/*
+******************************************************************************
+******************************************************************************
+SELECT - BEGIN
+******************************************************************************
+******************************************************************************
+*/
+
+if(Code.Operations.DoSelect)
+{
+	string strProcName = string.Format("{0}{1}{2}", sprocPrefix, table.Name, loadSuffix);
+%>
+
+If EXISTS (Select * FROM SYSOBJECTS WHERE ID = OBJECT_ID('<%= strProcName %>') AND sysstat & 0xf = 4)
+     DROP PROCEDURE <%= strProcName%>;
+GO
+
+/* ------------------------------------------------------------
+   PROCEDURE:    <%= strProcName%>
+   
+   Description:  Selects record(s) from table '<%= strProcName%>'
+   
+   AUTHOR:       <%=Author + " " + DateTime.Now %>
+   ------------------------------------------------------------ */
+
+CREATE PROCEDURE <%= strProcName%>
+<%
+	int counter = 0;	
+	
+	// list all keys as parameters
+	foreach(Column k in table.PrimaryKeyColumns)
+	{	
+		if( counter == 0 )
+		{			
+			Out.WriteLine("(");
+			Out.Indent();
+		}
+		else
+			Out.WriteLine(",");
+
+		counter++;
+		
+		Out.Write("@{0} {1}", k.Name, k.SQLDatatypeAndLength);
+	}	
+
+	if( counter > 0 )
+	{
+		Out.Unindent();
+		Out.WriteLine();
+		Out.WriteLine(")");
+	}
+%>
+As
+BEGIN
+	DECLARE @Err Int
+
+	Select
+<%
+	counter = 0;
+	
+	// list all fields	
+	foreach(Column f in table.Columns)
+	{
+		if(counter > 0)
+			Out.WriteLine(",");
+		
+		Out.Write("\t\t[{0}]", f.Name);		
+		
+		counter++;
+	}
+
+	Out.WriteLine();
+%>
+	FROM [<%= table.Name%>]	
+<%	if(table.PrimaryKeyColumns.Count > 0)
+	{		
+		Out.WriteLine("\tWHERE "); 
+		
+		counter = 0;
+
+		// compare keys with parameters
+		foreach(Column k in table.PrimaryKeyColumns)
+		{
+			// continue where part with an AND
+			if(counter > 0)
+				Out.WriteLine(" AND");
+			
+			counter++;
+			
+			Out.Write("\t\t([{0}] = @{0} OR @{0} IS NULL)", k.Name);			
+		}
+	}
+	
+	Out.WriteLine();
+%>
+
+	Set @Err = @@Error
+
+	RETURN @Err
+End
+GO
+
+-- Display the status of Proc creation
+If @@Error = 0 PRINT 'Procedure Creation: <%= strProcName%> Succeeded'
+Else PRINT 'Procedure Creation: <%= strProcName%> Error on Creation'
+GO
+
+<%
+	strProcName = string.Format("{0}{1}{2}", sprocPrefix, table.Name, loadallSuffix);
+%>
+
+If EXISTS (Select * FROM SYSOBJECTS WHERE ID = OBJECT_ID('<%= strProcName%>') AND sysstat & 0xf = 4)
+     DROP PROCEDURE <%= strProcName%>;
+GO
+
+/* ------------------------------------------------------------
+   PROCEDURE:    <%= strProcName%>
+   
+   Description:  Selects all records from the table '<%= strProcName%>'
+   
+   AUTHOR:       <%= Author + " " + DateTime.Now %>
+   ------------------------------------------------------------ */
+
+CREATE PROCEDURE <%= strProcName%>
+As
+BEGIN
+	DECLARE @Err Int
+
+	Select
+<%
+	counter = 0;	
+	
+	// list all fields	
+	foreach(Column f in table.Columns)
+	{
+		if( counter > 0)
+			Out.WriteLine(",");		
+
+		Out.Write("\t\t[{0}]", f.Name);
+
+		counter++;
+	}	
+%>
+	
+	FROM [<%= table.Name%>]
+
+<%
+	foreach(Column f in table.Columns)
+	{
+		if  (f.Name == "IsDeleted")
+		{
+			Out.WriteLine("\tWHERE [IsDeleted] = 'false'");
+			break;
+		}
+	}
+%>
+
+	Set @Err = @@Error
+
+	RETURN @Err
+End
+GO
+
+-- Display the status of Proc creation
+If @@Error = 0 PRINT 'Procedure Creation: <%= strProcName%> Succeeded'
+Else PRINT 'Procedure Creation: <%= strProcName%> Error on Creation'
+GO
+
+<%
+	strProcName = string.Format("{0}{1}{2}", sprocPrefix, table.Name, loadbyparamsSuffix);
+%>
+
+If EXISTS (Select * FROM SYSOBJECTS WHERE ID = OBJECT_ID('<%= strProcName%>') AND sysstat & 0xf = 4)
+     DROP PROCEDURE <%= strProcName%>;
+GO
+
+/* ------------------------------------------------------------
+   PROCEDURE:    <%= strProcName%>
+   
+   Description:  Selects records in '<%= strProcName%>' due to given parameters
+   
+   AUTHOR:       <%= Author + " " + DateTime.Now %>
+   ------------------------------------------------------------ */
+
+CREATE PROCEDURE <%= strProcName%>
+<%
+	counter = 0;
+	
+	// list all non-keys as parameters
+	foreach(Column f in table.Columns)
+	{
+		// check if field is not a key, identity or timestamp
+		
+		if( counter == 0 )
+			Out.WriteLine("(");
+		else
+			Out.WriteLine(",");		
+		
+		counter++;
+		
+			
+		if (f.SQLDatatype=="datetime")
+		{
+			Out.Write("\t@{0} {1} = null", "Before_" + f.Name, f.SQLDatatypeAndLength);
+			Out.WriteLine(",");		
+			Out.Write("\t@{0} {1} = null", "After_" + f.Name, f.SQLDatatypeAndLength);
+			Out.WriteLine(",");
+		}
+		
+		Out.Write("\t@{0} {1} = null", f.Name, f.SQLDatatypeAndLength);	
+		
+	}
+	
+	if(counter > 0 )
+	{
+		Out.WriteLine();
+		Out.WriteLine(")");	
+	}
+%>
+As
+BEGIN
+	DECLARE @Err Int
+
+	SELECT
+<%
+	counter = 0;	
+	Out.Unindent();
+	Out.Unindent();
+	// list all fields	
+	foreach(Column f in table.Columns)
+	{
+		if( counter > 0)
+			Out.WriteLine(",");		
+
+		Out.Write("\t\t[{0}].[{1}]", table.Name, f.Name);
+
+		counter++;
+	}
+	
+%>
+	
+	FROM [<%= table.Name%>]
+
+<%
+	Out.WriteLine("\tWHERE ");
+	counter = 0;
+	foreach(Column f in table.Columns)
+	{
+		Out.Write("\t\t");
+		if (f.IsNullable) Out.Write("(");
+		
+		//LIKE CASE ISNULL(CHARINDEX('%', @UserName),-1) WHEN 0 THEN '%' + [UserName] + '%' WHEN -1 THEN [UserName] ELSE @UserName END AND
+		if (f.AdoNetMapping.CLRType == "String"){
+			 
+			Out.Write("[{0}] LIKE CASE ISNULL(CHARINDEX('%',@{0}),-1) WHEN 0 THEN '%' + @{0} + '%' WHEN -1 THEN [{0}] ELSE @{0} END ",table.Columns[counter].Name);
+		}
+		else if (f.SQLDatatype=="datetime")
+		{
+			if (f.IsNullable==false) Out.Write("(");
+			Out.Write("[{0}] < @Before_{0} ",table.Columns[counter].Name);
+			Out.WriteLine(" OR @Before_{0} is null)",table.Columns[counter].Name);
+			Out.WriteLine(" AND");
+			Out.Write("([{0}] = @{0} ",table.Columns[counter].Name);
+			Out.WriteLine(" OR @{0} is null)",table.Columns[counter].Name);
+			Out.WriteLine(" AND");
+			Out.Write("([{0}] >= @After_{0} ",table.Columns[counter].Name);
+			Out.WriteLine(" OR @After_{0} is null)",table.Columns[counter].Name);
+		}
+		else{
+			Out.Write(" [{0}] = ISNULL(@{0},[{0}])",table.Columns[counter].Name);
+		}
+		
+		if (f.IsNullable && f.SQLDatatype!="datetime")
+			Out.WriteLine(" OR @{0} is null)",table.Columns[counter].Name);
+				
+		
+		if (counter < table.Columns.Count - 1)
+			Out.WriteLine(" AND");
+				
+		counter++;
+	}
+
+%>
+
+	Set @Err = @@Error
+
+	RETURN @Err
+End
+GO
+
+-- Display the status of Proc creation
+If @@Error = 0 PRINT 'Procedure Creation: <%= strProcName%> Succeeded'
+Else PRINT 'Procedure Creation: <%= strProcName%> Error on Creation'
+GO
+
+<%
+}
+
+/*
+******************************************************************************
+******************************************************************************
+SELECT - END
+******************************************************************************
+******************************************************************************
+*/
+
+
+
+/*
+******************************************************************************
+******************************************************************************
+UPDATE - BEGIN
+******************************************************************************
+******************************************************************************
+*/
+
+if(Code.Operations.DoUpdate)
+{
+	string strProcName = string.Format("{0}{1}{2}", sprocPrefix, table.Name, updateSuffix);
+%>
+
+If EXISTS (Select * FROM SYSOBJECTS WHERE ID = OBJECT_ID('<%= strProcName%>') AND sysstat & 0xf = 4)
+     DROP PROCEDURE <%= strProcName%>;
+GO
+
+/* ------------------------------------------------------------
+   PROCEDURE:    <%= strProcName%>
+   
+   Description:  Updates a record In table '<%= strProcName%>'
+   
+   AUTHOR:       <%= Author + " " + DateTime.Now %>
+   ------------------------------------------------------------ */
+
+CREATE PROCEDURE <%= strProcName%>
+<%
+	int counter = 0;
+	
+	// list all keys as parameters
+	foreach(Column k in table.PrimaryKeyColumns)
+	{		
+		if( counter == 0 )
+			Out.WriteLine("(");		
+		else
+			Out.WriteLine(",");		
+		
+		counter++;
+
+		Out.Write("\t@{0} {1}", k.Name, k.SQLDatatypeAndLength);
+	}
+	
+	// list all non-keys as parameters
+	foreach(Column f in table.Columns)
+	{
+		// check if field is not a key, identity or timestamp
+		if(!f.IsInPrimaryKey && !f.IsIdentity && !f.IsTimeStamp)
+		{		
+			if( counter == 0 )
+				Out.WriteLine("(");
+			else
+				Out.WriteLine(",");		
+		
+			counter++;
+			
+			Out.Write("\t@{0} {1}", f.Name, f.SQLDatatypeAndLength);		
+		}
+	}
+	
+	if(counter > 0 )
+	{
+		Out.WriteLine();
+		Out.WriteLine(")");	
+	}
+%>
+As
+BEGIN
+	DECLARE @Err Int
+
+	UPDATE [<%= table.Name%>]
+	Set
+<%
+		counter = 0;
+		// list all fields
+		foreach(Column f in table.Columns)
+		{	
+   			// check if field is not a key, identity or timestamp
+   			if(!f.IsInPrimaryKey && !f.IsIdentity && !f.IsTimeStamp)
+			{
+				if(counter > 0)
+					Out.WriteLine(",");				
+				
+				counter++;
+   				Out.Write("\t\t[{0}] = @{0}", f.Name);
+			}
+		}	
+		
+		Out.WriteLine();				
+
+		counter = 0;
+		// compare keys with parameters
+		foreach(Column k in table.PrimaryKeyColumns)
+		{
+			if(counter == 0)
+				Out.WriteLine("\tWHERE ");
+			else
+				Out.WriteLine(" AND");	
+			
+			Out.Write("\t\t([{0}] = @{0} OR @{0} is null)", k.Name);
+			
+			counter++;
+		}
+		Out.WriteLine();
+%>
+
+	Set @Err = @@Error
+
+	RETURN @Err
+End
+GO
+
+-- Display the status of Proc creation
+If @@Error = 0 PRINT 'Procedure Creation: <%= strProcName%> Succeeded'
+Else PRINT 'Procedure Creation: <%= strProcName%> Error on Creation'
+GO
+
+<%
+}
+
+/*
+******************************************************************************
+******************************************************************************
+UPDATE - END
+******************************************************************************
+******************************************************************************
+*/
+
+
+/*
+******************************************************************************
+******************************************************************************
+DELETE - BEGIN
+******************************************************************************
+******************************************************************************
+*/
+
+if(Code.Operations.DoDelete)
+{
+	string strProcName = string.Format("{0}{1}{2}", sprocPrefix, table.Name, deleteSuffix);
+%>
+
+If EXISTS (Select * FROM SYSOBJECTS WHERE ID = OBJECT_ID('<%= strProcName%>') AND sysstat & 0xf = 4)
+     DROP PROCEDURE <%= strProcName%>;
+GO
+
+/* ------------------------------------------------------------
+   PROCEDURE:    <%= strProcName%>
+   
+   Description:  Selects all records from the table '<%= strProcName%>' by given parameters
+   
+   AUTHOR:       <%= Author + " " + DateTime.Now %>
+   ------------------------------------------------------------ */
+
+CREATE PROCEDURE <%= strProcName%>
+<%
+	int counter = 0;
+	// list all keys as parameters
+	foreach(Column k in table.PrimaryKeyColumns)
+	{		
+		if( counter == 0)
+			Out.WriteLine("(");
+		else
+			Out.WriteLine(",");
+				
+		counter++;
+
+		Out.Write("\t@{0} {1}", k.Name, k.SQLDatatypeAndLength);
+	}
+	
+	if( counter > 0)
+	{
+		Out.WriteLine();
+		Out.WriteLine(")");
+	}
+%>
+As
+BEGIN
+	DECLARE @Err Int
+
+	DELETE
+	FROM [<%= table.Name%>]	
+<%
+	counter = 0;
+	// compare keys with parameters
+	foreach(Column k in table.PrimaryKeyColumns)
+	{	
+		if(counter == 0 )
+			Out.WriteLine("\tWHERE ");
+		else
+			Out.WriteLine(" AND");		
+
+		Out.Write("\t\t([{0}] = @{0} OR @{0} is null)", k.Name);
+
+		counter++;			
+	}
+	Out.WriteLine();
+%>
+	
+	Set @Err = @@Error
+
+	RETURN @Err
+End
+GO
+
+-- Display the status of Proc creation
+If @@Error = 0 PRINT 'Procedure Creation: <%= strProcName%> Succeeded'
+Else PRINT 'Procedure Creation: <%= strProcName%> Error on Creation'
+GO
+
+<%
+	strProcName = string.Format("{0}{1}{2}", sprocPrefix, table.Name, deletebyparamsSuffix);
+%>
+
+If EXISTS (Select * FROM SYSOBJECTS WHERE ID = OBJECT_ID('<%= strProcName%>') AND sysstat & 0xf = 4)
+     DROP PROCEDURE <%= strProcName%>;
+GO
+
+/* ------------------------------------------------------------
+   PROCEDURE:    <%= strProcName%>
+   
+   Description:  Delete all records from the table '<%= strProcName%>' by given parameters
+   
+   AUTHOR:       <%= Author + " " + DateTime.Now %>
+   ------------------------------------------------------------ */
+
+CREATE PROCEDURE <%= strProcName%>
+<%
+	counter = 0;
+	// list all keys as parameters
+	foreach(Column k in table.Columns)
+	{		
+		if( counter == 0)
+			Out.WriteLine("(");
+		else
+			Out.WriteLine(",");
+				
+		counter++;
+
+		Out.Write("\t@{0} {1}", k.Name, k.SQLDatatypeAndLength);
+	}
+	
+	if( counter > 0)
+	{
+		Out.WriteLine();
+		Out.WriteLine(")");
+	}
+%>
+As
+BEGIN
+	DECLARE @Err Int
+
+	DELETE
+	FROM [<%= table.Name%>]	
+<%
+	counter = 0;
+	// compare keys with parameters
+	foreach(Column k in table.Columns)
+	{	
+		if(counter == 0 )
+			Out.WriteLine("\tWHERE ");
+		else
+			Out.WriteLine(" AND");		
+
+		Out.Write("\t\t([{0}] = @{0} OR @{0} is null)", k.Name);
+
+		counter++;			
+	}
+	Out.WriteLine();
+%>
+	
+	Set @Err = @@Error
+
+	RETURN @Err
+End
+GO
+
+-- Display the status of Proc creation
+If @@Error = 0 PRINT 'Procedure Creation: <%= strProcName%> Succeeded'
+Else PRINT 'Procedure Creation: <%= strProcName%> Error on Creation'
+GO
+
+<%
+}
+
+/*
+******************************************************************************
+******************************************************************************
+DELETE - END
+******************************************************************************
+******************************************************************************
+*/
+%>]]></templatecode>
+</template>

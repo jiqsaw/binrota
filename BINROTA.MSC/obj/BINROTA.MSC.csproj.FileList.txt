@@ -1,0 +1,5 @@
+bin\Debug\BINROTA.MSC.dll
+bin\Debug\BINROTA.MSC.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\BINROTA.MSC.dll
+obj\Debug\BINROTA.MSC.pdb

@@ -1,0 +1,5 @@
+bin\Debug\BINROTA.COM.dll
+bin\Debug\BINROTA.COM.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\BINROTA.COM.dll
+obj\Debug\BINROTA.COM.pdb
